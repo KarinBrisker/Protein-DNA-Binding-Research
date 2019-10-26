@@ -319,4 +319,3 @@ if __name__ == '__main__':
         logging.info('| time: {:5.2f}s | test loss {:5.8f} | test accuracy {:4.6f} | lr {:2.5f}'.format(
             (time.time() - start_time), total_loss * 1.0 / count, 100.0 * correct / count,
             optimizer.param_groups[0]['lr']))
-
