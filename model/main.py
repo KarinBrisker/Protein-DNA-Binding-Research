@@ -8,8 +8,7 @@ import random
 from tqdm import tqdm
 from dictionary import Dictionary, ProteinVectorsDataset
 from torch.utils.data import Dataset
-# from model import SiameseModel
-from tmp import SiameseClassifier as SiameseModel
+from model import SiameseModel
 import numpy as np
 import time
 import torch
