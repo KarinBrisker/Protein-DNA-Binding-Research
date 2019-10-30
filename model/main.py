@@ -8,7 +8,8 @@ import random
 from tqdm import tqdm
 from dictionary import Dictionary, ProteinVectorsDataset
 from torch.utils.data import Dataset
-from model import Model
+# from model import SiameseModel
+from tmp import SiameseClassifier as SiameseModel
 import numpy as np
 import time
 import torch
@@ -22,7 +23,7 @@ parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_data
 parser.add_argument('--lr', type=float, default=0.01, help='initial learning rate')
 parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
+parser.add_argument('--batch_size', type=int, default=32, metavar='N', help='batch size')
 parser.add_argument('--seed', type=int, default=1234, help='random seed')
 parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
 parser.add_argument('--save', type=str, default='dna_142_lr_0_001.pt', help='path to save the final cl_model')
@@ -49,9 +50,9 @@ logging.info(device)
 """
 this function loads 11 features for each amino acid in a given Protein.
 this features are: MMS exposure, un-ordering etc.
-    output: dictionary. <protein_name> : 200(padded protein seq) * 12(amino acid features)
+    output: dictionary. <protein_name> : 200(padded protein seq) * 11(amino acid features)
 """
-# TODO: why 12 and not 11*200???
+# TODO: why 11 and not 11*200???
 # TODO: why 200 and not the sequence length???
 
 
@@ -65,11 +66,11 @@ def init_amino_acid_data():
             emb_amino_acids = f.readlines()
             for emb_amino in emb_amino_acids:
                 # + '\t0' - dummy, so we have even length
-                e = np.fromstring(emb_amino.strip() + '\t0', dtype=float, sep='\t')
+                e = np.fromstring(emb_amino.strip(), dtype=float, sep='\t')
                 emb.append(torch.tensor(e))
             for i in range(200 - len(emb_amino_acids)):
                 # + '\t0' - dummy, so we have even length
-                emb.append(np.array(np.zeros(12)))
+                emb.append(np.array(np.zeros(11)))
             protein_data = [dictionary.amino_acids2idx[c] for c in list(dictionary.protein2seq[p]) if c in dictionary.amino_acids]
             protein_data += [dictionary.amino_acids2idx['#']] * (200 - len(protein_data))
             embeddings[p] = torch.tensor(np.stack(emb, axis=0))
@@ -115,9 +116,8 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 def init_dataset(proteins):
     logging.info('loading train dev and test - split')
     # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    #                     proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-
-    train_proteins, dev_proteins, test_proteins = proteins[:2], proteins[2:4], proteins[4:]
+    # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    train_proteins, dev_proteins, test_proteins = proteins[:2], proteins[2:4], proteins[4:6]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -129,19 +129,6 @@ output: number of trainable parameters in the model
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-
-"""
-batch contains proteins, proteins2, dnas, dnas2, labels
-"""
-
-
-def get_batch_info(batch):
-    return batch[:, 1:201].clone().detach().view(-1, 200).long().to(device), \
-           batch[:, 201:401].clone().detach().view(-1, 200).long().to(device), \
-           batch[:, 401:417].clone().detach().view(-1, 16).long().to(device), \
-           batch[:, 417:433].clone().detach().long().view(-1, 16).to(device), \
-           batch[:, 433].clone().detach().view(-1, 1).to(device)
 
 
 """
@@ -159,26 +146,14 @@ def train(model, device, train_loader, optimizer, params, criterion):
     for i, data in enumerate(tqdm(train_loader), 0):
         model.zero_grad()
         # get the inputs
-        proteins, dnas, targets, amino_acids, proteins2, dnas2, targets2, amino_acids2 = data
-        bs = proteins.shape[0]
-        diff = abs(targets - targets2) > 0.2
-        label = torch.tensor([1 if (targets[i] - targets2[i]) > 0 else 0 for i in range(len(diff))])
-        batch = torch.cat([diff.view(-1,1).float(), proteins.float(), proteins2.float(), dnas.float(),
-                           dnas2.float(), label.view(-1,1).float(), amino_acids.view(bs,    -1).float(), amino_acids2.view(bs, -1).float()], dim=1)
-
-        batch = batch[(batch[:, 0] == 1).nonzero().squeeze(1)]
-        proteins, proteins2, dnas, dnas2, labels = get_batch_info(batch)
-        amino_acids_len = amino_acids.shape[1]
-        bs = proteins.shape[0]
-        amino_acids, amino_acids2 = (batch[:, 434: 434 + amino_acids_len * 12]).view(bs, amino_acids_len , 12).clone().detach().to(device), \
-                                    (batch[:, 434 + amino_acids_len * 12 :]).view(bs, -1, 12).clone().detach().to(device)
-        prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+        proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
+        prediction = model(proteins.to(device), proteins2.to(device), dnas.to(device), dnas2.to(device),
+                           amino_acids.double().to(device), amino_acids2.double().to(device))
         p = prediction.int().squeeze(1)
         t = labels.int().squeeze(1)
         correct += list(p == t).count(1)
         count += int(prediction.shape[0])
         loss = criterion(prediction.squeeze(1), t.float())
-        # loss = criterion(prediction, Variable(labels))
         optimizer.zero_grad()
         loss.backward()
         # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
@@ -212,21 +187,11 @@ def test(model, device, test_loader, criterion):
         correct = 0
         count = 0
         for i, data in enumerate(tqdm(test_loader), 0):
-            proteins, dnas, targets, amino_acids, proteins2, dnas2, targets2, amino_acids2 = data
+            #
+            proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
             bs = proteins.shape[0]
-            diff = abs(targets - targets2) > 0.2
-            label = torch.tensor([1 if (targets[i] - targets2[i]) > 0 else 0 for i in range(len(diff))])
-            batch = torch.cat([diff.view(-1, 1).float(), proteins.float(), proteins2.float(), dnas.float(),
-                               dnas2.float(), label.view(-1, 1).float(), amino_acids.view(bs, -1).float(),
-                               amino_acids2.view(bs, -1).float()], dim=1)
-            batch = batch[(batch[:, 0] == 1).nonzero().squeeze(1)]
-            proteins, proteins2, dnas, dnas2, labels = get_batch_info(batch)
-            amino_acids_len = amino_acids.shape[1]
-            bs = proteins.shape[0]
-            amino_acids, amino_acids2 = (batch[:, 434: 434 + amino_acids_len * 12]).view(bs, amino_acids_len,
-                 12).clone().detach().requires_grad_(True).to(device), (batch[:, 434 + amino_acids_len * 12:]).view(bs, -1,
-                 12).clone().detach().requires_grad_(True).to(device)
-            prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+            model.init_weights(bs)
+            prediction = model(proteins, proteins2, dnas, dnas2, amino_acids.double(), amino_acids2.double())
             p = prediction.int().squeeze(1)
             t = labels.int().squeeze(1)
             correct += list(p == t).count(1)
@@ -251,7 +216,7 @@ main function
 def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dictionary.proteins, len(dictionary.proteins)))
-    model = Model(128).to(device)
+    model = SiameseModel(device).double().to(device)
     logging.info('create train loader')
     train_set = ProteinVectorsDataset(train_data[:, 0], train_data[:, 1], train_data[:, 2], test_data[:, 3], amino_acids_emb)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
