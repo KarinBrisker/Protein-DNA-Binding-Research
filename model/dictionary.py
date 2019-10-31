@@ -62,8 +62,9 @@ output for each sample:
 
 
 class ProteinVectorsDataset(Dataset):
-    def __init__(self, proteins, proteins_names, dna, label, amino_acids):
+    def __init__(self, proteins, proteins_names, dna, label, amino_acids, device):
         self.amino_acids = amino_acids
+        self.device = device
         all_proteins = torch.stack(list(proteins))
         all_dnas = torch.stack(list(dna))
         all_labels = torch.tensor(list(label))
@@ -75,17 +76,17 @@ class ProteinVectorsDataset(Dataset):
         all_labels2 = torch.tensor(list(label2))
         diff = abs(all_labels - all_labels2) > 0.2
         label = torch.tensor([1 if (all_labels[i] - all_labels2[i]) > 0 else 0 for i in range(len(diff))])
-        batch = torch.cat([diff.view(-1,1).float(), all_proteins.float(), all_proteins2.float(), all_dnas.float(),
-                           all_dnas2.float(), label.view(-1,1).float()], dim=1)
+        batch = torch.cat([diff.view(-1,1).double(), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
+                           all_dnas2.double(), label.view(-1,1).double()], dim=1)
         batch = batch[(batch[:, 0] == 1).nonzero().squeeze(1)]
         proteins, proteins2, dnas, dnas2, labels = get_dataset_info(batch)
         self.amino_acids = amino_acids
-        self.all_proteins = proteins
-        self.all_dnas = dnas
-        self.all_labels = labels
+        self.all_proteins = proteins.to(self.device)
+        self.all_dnas = dnas.to(self.device)
+        self.all_labels = labels.squeeze(1).double().to(self.device)
         self.amino_acids1 = [self.amino_acids[x] for x in proteins_names]
-        self.all_proteins2 = proteins2
-        self.all_dnas2 = dnas2
+        self.all_proteins2 = proteins2.to(self.device)
+        self.all_dnas2 = dnas2.to(self.device)
         self.amino_acids2 = [self.amino_acids[x] for x in proteins_names2]
 
     def __len__(self):
@@ -95,10 +96,10 @@ class ProteinVectorsDataset(Dataset):
         protein = self.all_proteins[idx]
         dna = self.all_dnas[idx]
         label = self.all_labels[idx]
-        amino_acids = self.amino_acids1[idx]
+        amino_acids = self.amino_acids1[idx].double().to(self.device)
 
         protein2 = self.all_proteins2[idx]
         dna2 = self.all_dnas2[idx]
-        amino_acids2 = self.amino_acids2[idx]
+        amino_acids2 = self.amino_acids2[idx].double().to(self.device)
 
         return protein, dna, label, amino_acids, protein2, dna2, amino_acids2

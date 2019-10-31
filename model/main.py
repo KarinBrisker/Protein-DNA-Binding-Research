@@ -20,10 +20,10 @@ import logging
 
 parser = argparse.ArgumentParser(description='DNA Model')
 parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-parser.add_argument('--lr', type=float, default=0.01, help='initial learning rate')
+parser.add_argument('--lr', type=float, default=0.003, help='initial learning rate')
 parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
 parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-parser.add_argument('--batch_size', type=int, default=32, metavar='N', help='batch size')
+parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
 parser.add_argument('--seed', type=int, default=1234, help='random seed')
 parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
 parser.add_argument('--save', type=str, default='dna_142_lr_0_001.pt', help='path to save the final cl_model')
@@ -117,7 +117,7 @@ def init_dataset(proteins):
     logging.info('loading train dev and test - split')
     # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
     # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    train_proteins, dev_proteins, test_proteins = proteins[:2], proteins[2:4], proteins[4:6]
+    train_proteins, dev_proteins, test_proteins = proteins[:1], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -147,30 +147,24 @@ def train(model, device, train_loader, optimizer, params, criterion):
         model.zero_grad()
         # get the inputs
         proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
-        prediction = model(proteins.to(device), proteins2.to(device), dnas.to(device), dnas2.to(device),
-                           amino_acids.double().to(device), amino_acids2.double().to(device))
-        p = prediction.int().squeeze(1).double().to(device)
-        t = labels.int().squeeze(1).double().to(device)
-        correct += list(p == t).count(1)
-        count += int(prediction.shape[0])
-        loss = criterion(p, t).double().to(device)
-        loss.requires_grad = True
+        prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+        correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
+        count += len(prediction)
+        loss = criterion(prediction.squeeze(), labels)
         optimizer.zero_grad()
         loss.backward()
         # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
         torch.nn.utils.clip_grad_norm_(params, args.clip)
         optimizer.step()
         total_loss += loss.item()
-        all_predictions += p.tolist()
-        all_targets += t.tolist()
-    logging.info('\n')
+        all_predictions += prediction.squeeze().int().tolist()
+        all_targets += labels.int().tolist()
+    logging.info('-' * 89 + '\n')
     logging.info(confusion_matrix(all_targets, all_predictions))
-    logging.info(f'train precision: {precision_score(all_targets, all_predictions)}, train recall: {recall_score(all_targets, all_predictions)}')
-    logging.info('-' * 89)
-    logging.info(
-        '| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f}'.format(
-            (time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct / count,
-            optimizer.param_groups[0]['lr']))
+    logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.8f} '
+         '| train recall {:5.8f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct /
+                count, optimizer.param_groups[0]['lr'], precision_score(all_targets,  all_predictions), recall_score(
+        all_targets, all_predictions)))
 
 
 """
@@ -197,7 +191,7 @@ def test(model, device, test_loader, criterion):
             t = labels.int().squeeze(1)
             correct += list(p == t).count(1)
             count += int(prediction.shape[0])
-            loss = criterion(prediction.squeeze(1), t.float())
+            loss = criterion(prediction.squeeze(1), t.double())
             all_predictions += p.tolist()
             all_targets += t.tolist()
             total_loss += loss.detach()
@@ -218,18 +212,16 @@ def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dictionary.proteins, len(dictionary.proteins)))
     model = SiameseClassifier(device).double().to(device)
-    model = DataParallel(model, device_ids=[1, 0, 2, 3], output_device=1)  # run on all 4 gpu
-
     logging.info('create train loader')
-    train_set = ProteinVectorsDataset(train_data[:, 0], train_data[:, 1], train_data[:, 2], test_data[:, 3], amino_acids_emb)
+    train_set = ProteinVectorsDataset(train_data[:, 0], train_data[:, 1], train_data[:, 2], test_data[:, 3], amino_acids_emb, device)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-    logging.info('create dev loader')
-    dev_set = ProteinVectorsDataset(dev_data[:, 0], dev_data[:, 1], dev_data[:, 2], test_data[:, 3], amino_acids_emb)
-    dev_loader = torch.utils.data.DataLoader(dev_set, batch_size=args.batch_size)
-    logging.info('create test loader')
-    test_set = ProteinVectorsDataset(test_data[:, 0], test_data[:, 1], test_data[:, 2], test_data[:, 3], amino_acids_emb)
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=args.batch_size)
-    logging.info('         ---     finished    ---         ')
+    # logging.info('create dev loader')
+    # dev_set = ProteinVectorsDataset(dev_data[:, 0], dev_data[:, 1], dev_data[:, 2], test_data[:, 3], amino_acids_emb, device)
+    # dev_loader = torch.utils.data.DataLoader(dev_set, batch_size=args.batch_size)
+    # logging.info('create test loader')
+    # test_set = ProteinVectorsDataset(test_data[:, 0], test_data[:, 1], test_data[:, 2], test_data[:, 3], amino_acids_emb, device)
+    # test_loader = torch.utils.data.DataLoader(test_set, batch_size=args.batch_size)
+    # logging.info('         ---     finished    ---         ')
 
     logging.info(f'The model has {count_parameters(model):,} trainable parameters')
     criterion = nn.BCELoss().to(device)

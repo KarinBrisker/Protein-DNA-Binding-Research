@@ -136,7 +136,7 @@ class SiameseClassifier(nn.Module):
     def __init__(self, device):
         super(SiameseClassifier, self).__init__()
         self.ReLU_activation = nn.ReLU()
-        self.Sigmoid_activation = nn.Sigmoid()
+        self.Sigmoid_activation = torch.sigmoid
         self.embedding_dim = 64
         self.features_linear_layer = nn.Linear(11, 64, bias=True)
         # protein
