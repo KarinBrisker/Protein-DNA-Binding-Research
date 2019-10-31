@@ -114,8 +114,9 @@ class BiLSTM(nn.Module):
 
     def forward(self, x):
         # Set initial states
-        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(self.device)  # 2 for bidirection
-        c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(self.device)
+        # sending tensors to the device of the input -> important for data parallelism
+        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)  # 2 for bidirection
+        c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)
 
         # Forward propagate LSTM
         x = x.float()
@@ -134,7 +135,8 @@ class SiameseClassifier(nn.Module):
     Different to the paper, the weights are untied, to avoid exploding/ vanishing gradients. """
     def __init__(self, device):
         super(SiameseClassifier, self).__init__()
-        self.activation = nn.ReLU()
+        self.ReLU_activation = nn.ReLU()
+        self.Sigmoid_activation = nn.Sigmoid()
         self.embedding_dim = 64
         self.features_linear_layer = nn.Linear(11, 64, bias=True)
         # protein
@@ -160,8 +162,8 @@ class SiameseClassifier(nn.Module):
 
     def forward(self, p1, p2, d1, d2, amino_acids1, amino_acids2):
         """ Performs a single forward pass through the siamese architecture. """
-        amino_acids1 = self.activation(self.features_linear_layer(amino_acids1))
-        amino_acids2 = self.activation(self.features_linear_layer(amino_acids2))
+        amino_acids1 = self.ReLU_activation(self.features_linear_layer(amino_acids1))
+        amino_acids2 = self.ReLU_activation(self.features_linear_layer(amino_acids2))
 
         p1 = self.embedding_amino_acids(p1)  # p: (batch_size x l_p x embedding_dim)
         p2 = self.embedding_amino_acids(p2)  # p: (batch_size x l_p x embedding_dim)
@@ -199,7 +201,7 @@ class SiameseClassifier(nn.Module):
 
         y_hat1 = self.output_fc(h1)
         y_hat2 = self.output_fc(h2)
-        rank = self.activation(y_hat1 - y_hat2)
+        rank = self.Sigmoid_activation(y_hat1 - y_hat2)
 
         return rank
         # # Obtain similarity score predictions by calculating the Manhattan distance between sentence encodings

@@ -8,11 +8,12 @@ import random
 from tqdm import tqdm
 from dictionary import Dictionary, ProteinVectorsDataset
 from torch.utils.data import Dataset
-from model import SiameseModel
+from model import SiameseClassifier
 import numpy as np
 import time
 import torch
 import torch.nn as nn
+from torch.nn import DataParallel
 import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import logging
@@ -148,11 +149,12 @@ def train(model, device, train_loader, optimizer, params, criterion):
         proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
         prediction = model(proteins.to(device), proteins2.to(device), dnas.to(device), dnas2.to(device),
                            amino_acids.double().to(device), amino_acids2.double().to(device))
-        p = prediction.int().squeeze(1)
-        t = labels.int().squeeze(1)
+        p = prediction.int().squeeze(1).double().to(device)
+        t = labels.int().squeeze(1).double().to(device)
         correct += list(p == t).count(1)
         count += int(prediction.shape[0])
-        loss = criterion(prediction.squeeze(1), t.float())
+        loss = criterion(p, t).double().to(device)
+        loss.requires_grad = True
         optimizer.zero_grad()
         loss.backward()
         # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
@@ -215,7 +217,9 @@ main function
 def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dictionary.proteins, len(dictionary.proteins)))
-    model = SiameseModel(device).double().to(device)
+    model = SiameseClassifier(device).double().to(device)
+    model = DataParallel(model, device_ids=[1, 0, 2, 3], output_device=1)  # run on all 4 gpu
+
     logging.info('create train loader')
     train_set = ProteinVectorsDataset(train_data[:, 0], train_data[:, 1], train_data[:, 2], test_data[:, 3], amino_acids_emb)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
