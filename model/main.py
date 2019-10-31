@@ -13,7 +13,6 @@ import numpy as np
 import time
 import torch
 import torch.nn as nn
-from torch.nn import DataParallel
 import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import logging
