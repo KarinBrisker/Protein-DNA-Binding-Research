@@ -61,7 +61,7 @@ output for each sample:
 """
 
 
-class ProteinVectorsDataset(Dataset):
+class ProteinsDataset(Dataset):
     def __init__(self, proteins, proteins_names, dna, label, amino_acids, device):
         self.amino_acids = amino_acids
         self.device = device

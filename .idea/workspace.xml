@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/DNA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DNA.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/karin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/karin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/dictionary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
     </list>
@@ -14,15 +15,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1572780106226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1572788961863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="31" selection-start-line="31" selection-end-line="31" />
+            <state relative-caret-position="380">
+              <caret line="225" column="25" lean-forward="true" selection-start-line="225" selection-start-column="25" selection-end-line="225" selection-end-column="25" />
               <folding>
                 <element signature="e#16#31#0" expanded="true" />
               </folding>
@@ -30,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/dictionary.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="79" column="72" selection-start-line="79" selection-start-column="72" selection-end-line="79" selection-end-column="72" />
+            <state relative-caret-position="450">
+              <caret line="78" selection-start-line="78" selection-end-line="78" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -42,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="92" column="21" lean-forward="true" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="53" />
+            <state relative-caret-position="-1800">
+              <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -67,19 +68,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>de</find>
-      <find>to(d</find>
-      <find>BiLSTM</find>
-      <find>encoder_protein1</find>
-      <find>device</find>
-      <find>init_hiddens</find>
-      <find>model(</find>
-      <find>opt</find>
-      <find>SelfAttention_Module</find>
-      <find>float</find>
-      <find>ProteinVectorsDataset</find>
-      <find>get_proteins_data</find>
-      <find>criterion</find>
       <find>.to(device)</find>
       <find>bce</find>
       <find>float()</find>
@@ -97,6 +85,19 @@
       <find>num_amino_acids</find>
       <find>num_nucleotides</find>
       <find>model =</find>
+      <find>output_fc</find>
+      <find>initialize_parameters</find>
+      <find>device</find>
+      <find>ProteinVectorsDataset</find>
+      <find>model =</find>
+      <find>train_set</find>
+      <find>get_proteins_data</find>
+      <find>init_dataset</find>
+      <find>logging.info</find>
+      <find>cuda</find>
+      <find>Decomposable_Attention</find>
+      <find>get_dataset_info</find>
+      <find>create_dataset_loader</find>
     </findStrings>
     <replaceStrings>
       <replace>ProteinVectorsDataset</replace>
@@ -108,6 +109,11 @@
       <replace>args.input_size</replace>
       <replace>args.num_nucleotides</replace>
       <replace>args.hidden_size</replace>
+      <replace>Decomposable_Attention</replace>
+      <replace>dict</replace>
+      <replace>DecomposableAttention</replace>
+      <replace>ProteinsDataset</replace>
+      <replace>print</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -119,8 +125,8 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/model/tmp.py" />
         <option value="$PROJECT_DIR$/model/dictionary.py" />
-        <option value="$PROJECT_DIR$/model/main.py" />
         <option value="$PROJECT_DIR$/model/model.py" />
+        <option value="$PROJECT_DIR$/model/main.py" />
       </list>
     </option>
   </component>
@@ -252,12 +258,12 @@
       <workItem from="1572369368438" duration="6387000" />
       <workItem from="1572417925213" duration="32071000" />
       <workItem from="1572513107869" duration="17388000" />
-      <workItem from="1572776230143" duration="3699000" />
+      <workItem from="1572776230143" duration="11001000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="77001000" />
+    <option name="totallyTimeSpent" value="84303000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
@@ -340,20 +346,33 @@
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>95</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>93</line>
-          <option name="timeStamp" value="29" />
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>225</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
+      <expression>
+        <expression-string>torch.cat([diff.view(-1,1).double(), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
+                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>torch.cat([diff.view(-1,1).double(), all_proteins, all_proteins2.double(), all_dnas.double(),
+                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>torch.cat([diff.view(-1,1), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
+                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>logging.info('-' * 89)
 logging.info('\n')
@@ -408,66 +427,50 @@ logging.info(
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>logging.info('-' * 89)
-logging.info(f'\n' + confusion_matrix(all_targets, all_predictions) + '\n' + 'train precision:' +
-    {precision_score(all_targets, all_predictions)} + 'train recall:' +
-    {recall_score(all_targets, all_predictions)} + '| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} '
-    '| lr {:2.5f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct / count,
-        optimizer.param_groups[0]['lr']))</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>torch.cat([diff.view(-1,1).float(), all_proteins.float(), all_proteins2.float(), all_dnas.float(),
-                          all_dnas2.float(), label.view(-1,1).float()], dim=1)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>self.lstm.float()(x, (h0, c0))  # ou</expression-string>
+        <expression-string>train_data[:, 3]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>self.fc.float()(out)</expression-string>
+        <expression-string>train_data[:, 2]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>self.fc(out)</expression-string>
+        <expression-string>train_data[:, 1]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>criterion(prediction.squeeze(), labels).backward()</expression-string>
+        <expression-string>train_data[:, 0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>criterion(prediction.squeeze(), labels)</expression-string>
+        <expression-string>list(params_model)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.int().squeeze() == labels.int()</expression-string>
+        <expression-string>emb += [np.array(np.zeros(11))] * (200 - len(emb_amino_acids))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.int().squeeze()</expression-string>
+        <expression-string>[np.array(np.zeros(11))] * (200 - len(emb_amino_acids))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>max(prediction.tolist())</expression-string>
+        <expression-string>[np.array(np.zeros(11))] * 200 - len(emb_amino_acids)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>min(prediction.tolist())</expression-string>
+        <expression-string>[np.array(np.zeros(11))] * 100</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -498,32 +501,32 @@ logging.info(f'\n' + confusion_matrix(all_targets, all_predictions) + '\n' + 'tr
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/dictionary.py">
+    <entry file="file://$PROJECT_DIR$/model/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="79" column="72" selection-start-line="79" selection-start-column="72" selection-end-line="79" selection-end-column="72" />
+        <state relative-caret-position="-1800">
+          <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        <state relative-caret-position="380">
+          <caret line="225" column="25" lean-forward="true" selection-start-line="225" selection-start-column="25" selection-end-line="225" selection-end-column="25" />
           <folding>
             <element signature="e#16#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
+    <entry file="file://$PROJECT_DIR$/model/dictionary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="92" column="21" lean-forward="true" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="53" />
+        <state relative-caret-position="450">
+          <caret line="78" selection-start-line="78" selection-end-line="78" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>

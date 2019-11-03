@@ -2,6 +2,7 @@
   <dictionary name="karin">
     <words>
       <w>learnable</w>
+      <w>lstm</w>
     </words>
   </dictionary>
 </component>

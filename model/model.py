@@ -5,18 +5,25 @@ import torch
 import torch.optim as optim
 torch.backends.cudnn.enabled = False
 
+"""
+# resources:
 
-# https://github.com/nvnhat95/Natural-Language-Inference
-# https://github.com/fionn-mac/Manhattan-LSTM/blob/master/PyTorch/manhattan_lstm.py
+https://github.com/nvnhat95/Natural-Language-Inference  :  self-attention implementation
+https://github.com/fionn-mac/Manhattan-LSTM/blob/master/PyTorch/manhattan_lstm.py
+https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/02-intermediate/bidirectional_recurrent_neural_network/main.py
+https://github.com/demelin/Sentence-similarity-classifier-for-pyTorch/blob/master/similarity_estimator/networks.py
 
-class SelfAttention_Module(nn.Module):
+"""
+
+
+# F - bi-LSTM model
+class DecomposableAttention(nn.Module):
     def __init__(self, hidden_dim, use_BN=True, dropout_rate=0.5):
-        super(SelfAttention_Module, self).__init__()
+        super(DecomposableAttention, self).__init__()
 
         # linear -> BN -> relu -> dropout -> linear -> relu
         def MLP(input_dim, output_dim, use_BN, dropout_rate):
-            layers = []
-            layers.append(nn.Linear(input_dim, output_dim))
+            layers = [nn.Linear(input_dim, output_dim)]
             if use_BN:
                 layers.append(nn.BatchNorm1d(output_dim, affine=True))
             layers.append(nn.ReLU())
@@ -30,8 +37,6 @@ class SelfAttention_Module(nn.Module):
             return mlp
 
         self.hidden_dim = hidden_dim
-        # self.F = MLP(hidden_dim, hidden_dim, use_BN, dropout_rate)
-        # self.F_dna = MLP(hidden_dim, hidden_dim, use_BN, dropout_rate)
         self.G = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
         self.H = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
 
@@ -65,10 +70,6 @@ class SelfAttention_Module(nn.Module):
 
         return h
 
-# https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/02-intermediate/bidirectional_recurrent_neural_network/main.py
-# https://github.com/demelin/Sentence-similarity-classifier-for-pyTorch/blob/master/similarity_estimator/networks.py
-# Bidirectional recurrent neural network (many-to-one)
-
 
 class BiLSTM(nn.Module):
     def __init__(self, args, input_size, device):
@@ -86,7 +87,7 @@ class BiLSTM(nn.Module):
     def forward(self, x):
         # Set initial states
         # sending tensors to the device of the input -> important for data parallelism
-        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)  # 2 for bidirection
+        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)  # 2 for bidirectional
         c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)
 
         # Forward propagate LSTM
@@ -118,14 +119,12 @@ class SiameseClassifier(nn.Module):
         self.encoder_dna1 = self.encoder_dna2 = BiLSTM(args, int(args.input_size/2), device).float().to(device)
         # Initialize network parameters
         self.initialize_parameters()
-        # Declare loss function
-        self.loss_function = nn.MSELoss()
         # Initialize network optimizers
         self.optimizer_a = optim.Adam(self.encoder_protein1.parameters(), lr=args.lr,
                                       betas=(args.beta, 0.999))
         self.optimizer_b = optim.Adam(self.encoder_protein1.parameters(), lr=args.lr,
                                       betas=(args.beta, 0.999))
-        self.feature_extractor_module = SelfAttention_Module(self.hidden_size * 2)
+        self.feature_extractor_module = DecomposableAttention(self.hidden_size * 2)
         self.device = device
         self.output_fc = nn.Linear(self.hidden_size * 2, 1, bias=True)
 
