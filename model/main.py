@@ -181,19 +181,14 @@ def test(model, device, test_loader, criterion):
         correct = 0
         count = 0
         for i, data in enumerate(tqdm(test_loader), 0):
-            #
             proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
-            bs = proteins.shape[0]
-            model.init_weights(bs)
-            prediction = model(proteins, proteins2, dnas, dnas2, amino_acids.double(), amino_acids2.double())
-            p = prediction.int().squeeze(1)
-            t = labels.int().squeeze(1)
-            correct += list(p == t).count(1)
-            count += int(prediction.shape[0])
-            loss = criterion(prediction.squeeze(1), t.double())
-            all_predictions += p.tolist()
-            all_targets += t.tolist()
-            total_loss += loss.detach()
+            prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+            correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
+            count += len(prediction)
+            loss = criterion(prediction.squeeze(), labels)
+            total_loss += loss.item()
+            all_predictions += prediction.squeeze().int().tolist()
+            all_targets += labels.int().tolist()
         logging.info('\n')
         logging.info(confusion_matrix(all_targets, all_predictions))
         logging.info(f'test precision: {precision_score(all_targets, all_predictions)}, test recall: {recall_score(all_targets, all_predictions)}')
