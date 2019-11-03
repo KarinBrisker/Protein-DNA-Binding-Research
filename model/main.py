@@ -14,8 +14,10 @@ import time
 import torch
 import torch.nn as nn
 import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, confusion_matrix
 import logging
+
+# Hyper-parameters
 
 parser = argparse.ArgumentParser(description='DNA Model')
 parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
@@ -25,12 +27,18 @@ parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit'
 parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
 parser.add_argument('--seed', type=int, default=1234, help='random seed')
 parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
-parser.add_argument('--save', type=str, default='dna_142_lr_0_001.pt', help='path to save the final cl_model')
-parser.add_argument('--logging_output', type=str, default='', help='logging output file name')
-parser.add_argument('--dropout', type=float, default=0.5, help='the probability for dropout [default: 0.5]')
+parser.add_argument('--input_size', type=float, default=128, help='input size')
+parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
+parser.add_argument('--beta', type=float, default=0.5, help='beta')
+parser.add_argument('--num_layers', type=float, default=2, help='num layers bi-lstm')
+parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
+parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
+parser.add_argument('--embedding_dim', type=float, default=64, help='embedding dim of each nucleotide and amino-acid')
+parser.add_argument('--logging_output', type=str, default='try', help='logging output file name')
+parser.add_argument('--dropout', type=float, default=0.5, help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
 args = parser.parse_args()
 logging.basicConfig(filename=args.logging_output, level=logging.DEBUG, filemode='w')
-args.save_dir = os.path.join('../model/LARGE_model', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+args.save_dir = os.path.join('../model', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
 logging.getLogger().setLevel(logging.INFO)
 
 logging.info("\nParameters:")
@@ -42,16 +50,12 @@ torch.manual_seed(args.seed)
 random.seed(args.seed)
 np.random.seed(1234)
 device = torch.device("cuda:1")
-# device = "cpu"
-logging.info(device)
-
 
 """
 this function loads 11 features for each amino acid in a given Protein.
 this features are: MMS exposure, un-ordering etc.
     output: dictionary. <protein_name> : 200(padded protein seq) * 11(amino acid features)
 """
-# TODO: why 11 and not 11*200???
 # TODO: why 200 and not the sequence length???
 
 
@@ -160,7 +164,7 @@ def train(model, device, train_loader, optimizer, params, criterion):
         all_targets += labels.int().tolist()
     logging.info('-' * 89 + '\n')
     logging.info(confusion_matrix(all_targets, all_predictions))
-    logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.8f} '
+    logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.8f}'
          '| train recall {:5.8f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct /
                 count, optimizer.param_groups[0]['lr'], precision_score(all_targets,  all_predictions), recall_score(
         all_targets, all_predictions)))
@@ -205,17 +209,16 @@ main function
 def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dictionary.proteins, len(dictionary.proteins)))
-    model = SiameseClassifier(device).double().to(device)
+    model = SiameseClassifier(args, device).double().to(device)
     logging.info('create train loader')
     train_set = ProteinVectorsDataset(train_data[:, 0], train_data[:, 1], train_data[:, 2], test_data[:, 3], amino_acids_emb, device)
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-    # logging.info('create dev loader')
-    # dev_set = ProteinVectorsDataset(dev_data[:, 0], dev_data[:, 1], dev_data[:, 2], test_data[:, 3], amino_acids_emb, device)
-    # dev_loader = torch.utils.data.DataLoader(dev_set, batch_size=args.batch_size)
-    # logging.info('create test loader')
-    # test_set = ProteinVectorsDataset(test_data[:, 0], test_data[:, 1], test_data[:, 2], test_data[:, 3], amino_acids_emb, device)
-    # test_loader = torch.utils.data.DataLoader(test_set, batch_size=args.batch_size)
-    # logging.info('         ---     finished    ---         ')
+    logging.info('create dev loader')
+    dev_set = ProteinVectorsDataset(dev_data[:, 0], dev_data[:, 1], dev_data[:, 2], test_data[:, 3], amino_acids_emb, device)
+    dev_loader = torch.utils.data.DataLoader(dev_set, batch_size=args.batch_size)
+    logging.info('create test loader')
+    test_set = ProteinVectorsDataset(test_data[:, 0], test_data[:, 1], test_data[:, 2], test_data[:, 3], amino_acids_emb, device)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=args.batch_size)
 
     logging.info(f'The model has {count_parameters(model):,} trainable parameters')
     criterion = nn.BCELoss().to(device)
@@ -224,13 +227,13 @@ def main():
     optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
     # if not os.path.isdir(args.save_dir):
     #     os.makedirs(args.save_dir)
-    # Loop over epochs.
+
     logging.info('\n\n --------- training --------\n')
     for epoch in range(1, args.epochs):
         logging.info('epoch: ' + str(epoch))
         train(model, device, train_loader, optimizer, params, criterion)
-        # test(model, device, dev_loader, criterion)
-    # test(model, device, test_loader, criterion)
+        test(model, device, dev_loader, criterion)
+    test(model, device, test_loader, criterion)
 
 
 if __name__ == '__main__':

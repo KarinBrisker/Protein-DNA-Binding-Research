@@ -1,46 +1,11 @@
-import os
-import torch
-import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 from torch.nn.init import xavier_normal_
-
-torch.backends.cudnn.enabled = False
 import torch.nn as nn
 import torch
 import torch.optim as optim
-# >>> rnn = nn.LSTM(10, 20, 2)
-# >>> input = torch.randn(5, 3, 10)
-# >>> h0 = torch.randn(2, 3, 20)
-# >>> c0 = torch.randn(2, 3, 20)
-# >>> output, (hn, cn) = rnn(input, (h0, c0))
+torch.backends.cudnn.enabled = False
 
 
-# input_size – The number of expected features in the input x
-# hidden_size – The number of features in the hidden state h
-# num_layers – Number of recurrent layers. E.g., setting num_layers=2 would mean stacking two LSTMs together to form a stacked LSTM, with the second LSTM taking in outputs of the first LSTM and computing the final results. Default: 1
-# bias – If False, then the layer does not use bias weights b_ih and b_hh. Default: True
-# batch_first – If True, then the input and output tensors are provided as (batch, seq, feature). Default: False
-# dropout – If non-zero, introduces a Dropout layer on the outputs of each LSTM layer except the last layer, with dropout probability equal to dropout. Default: 0
-# bidirectional – If True, becomes a bidirectional LSTM. Default: False
-
-
-# Hyper-parameters
-from torch.autograd import Variable
-from torch.nn.init import xavier_normal
-from torch.nn.utils import clip_grad_norm
-
-sequence_length = 28
-input_size = 128
-hidden_size = 128
-num_layers = 2
-num_classes = 10
-batch_size = 100
-num_epochs = 2
-learning_rate = 0.003
-beta_1 = 0.5
-num_amino_acids = 21
-num_nucleotides = 4
 # https://github.com/nvnhat95/Natural-Language-Inference
 # https://github.com/fionn-mac/Manhattan-LSTM/blob/master/PyTorch/manhattan_lstm.py
 
@@ -103,14 +68,20 @@ class SelfAttention_Module(nn.Module):
 # https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/02-intermediate/bidirectional_recurrent_neural_network/main.py
 # https://github.com/demelin/Sentence-similarity-classifier-for-pyTorch/blob/master/similarity_estimator/networks.py
 # Bidirectional recurrent neural network (many-to-one)
+
+
 class BiLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, num_classes, device, drop_prob=0.5):
+    def __init__(self, args, input_size, device):
         super(BiLSTM, self).__init__()
         self.device = device
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, dropout=drop_prob, batch_first=True, bidirectional=True).float().to(device)
-        self.fc = nn.Linear(hidden_size * 2, num_classes).float()  # 2 for bidirection
+        self.hidden_size = args.hidden_size
+        self.num_layers = args.num_layers
+        # batch_first – If True, then the input and output tensors are provided as (batch, seq, feature). Default: False
+        # num_layers – Number of recurrent layers. E.g., setting num_layers=2 would mean stacking two LSTMs together to
+        # form a stacked LSTM, with the second LSTM taking in outputs of the first LSTM and computing the final results.
+        # Default: 1
+        self.lstm = nn.LSTM(input_size, self.hidden_size, self.num_layers, dropout=args.dropout, batch_first=True, bidirectional=True).float().to(device)
+        self.fc = nn.Linear(self.hidden_size * 2, self.hidden_size * 2)  # 2 for bidirection
 
     def forward(self, x):
         # Set initial states
@@ -122,43 +93,41 @@ class BiLSTM(nn.Module):
         x = x.float()
         out, _ = self.lstm.float()(x, (h0, c0))  # out: tensor of shape (batch_size, seq_length, hidden_size*2)
 #
+        out = self.fc.float()(out)
         # Decode the hidden state of the last time step
         # out = self.fc.float()(out[:, -1, :])
         return out
 
 
-# model = BiLSTM(input_size, hidden_size, num_layers, num_classes).to(device)
-
-
 class SiameseClassifier(nn.Module):
     """ Sentence similarity estimator implementing a siamese arcitecture. Uses pretrained word2vec embeddings.
     Different to the paper, the weights are untied, to avoid exploding/ vanishing gradients. """
-    def __init__(self, device):
+    def __init__(self, args, device):
         super(SiameseClassifier, self).__init__()
+        self.hidden_size = args.hidden_size
         self.ReLU_activation = nn.ReLU()
         self.Sigmoid_activation = torch.sigmoid
-        self.embedding_dim = 64
         self.features_linear_layer = nn.Linear(11, 64, bias=True)
         # protein
-        self.embedding_amino_acids = nn.Embedding(num_amino_acids, self.embedding_dim, padding_idx=num_amino_acids - 1)
+        self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim, padding_idx=args.num_amino_acids - 1)
         # dna
-        self.embedding_nucleotides = nn.Embedding(num_nucleotides, self.embedding_dim)
+        self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
         # Initialize constituent network
-        self.encoder_protein1 = self.encoder_protein2 = BiLSTM(input_size, hidden_size, num_layers, num_classes, device).float().to(device)
+        self.encoder_protein1 = self.encoder_protein2 = BiLSTM(args, args.input_size, device).float().to(device)
         # Initialize constituent network
-        self.encoder_dna1 = self.encoder_dna2 = BiLSTM(self.embedding_dim, hidden_size, num_layers, num_classes, device).float().to(device)
+        self.encoder_dna1 = self.encoder_dna2 = BiLSTM(args, int(args.input_size/2), device).float().to(device)
         # Initialize network parameters
         self.initialize_parameters()
         # Declare loss function
         self.loss_function = nn.MSELoss()
         # Initialize network optimizers
-        self.optimizer_a = optim.Adam(self.encoder_protein1.parameters(), lr=learning_rate,
-                                      betas=(beta_1, 0.999))
-        self.optimizer_b = optim.Adam(self.encoder_protein1.parameters(), lr=learning_rate,
-                                      betas=(beta_1, 0.999))
-        self.feature_extractor_module = SelfAttention_Module(hidden_size * 2)
+        self.optimizer_a = optim.Adam(self.encoder_protein1.parameters(), lr=args.lr,
+                                      betas=(args.beta, 0.999))
+        self.optimizer_b = optim.Adam(self.encoder_protein1.parameters(), lr=args.lr,
+                                      betas=(args.beta, 0.999))
+        self.feature_extractor_module = SelfAttention_Module(self.hidden_size * 2)
         self.device = device
-        self.output_fc = nn.Linear(hidden_size * 2, 1, bias=True)
+        self.output_fc = nn.Linear(self.hidden_size * 2, 1, bias=True)
 
     def forward(self, p1, p2, d1, d2, amino_acids1, amino_acids2):
         """ Performs a single forward pass through the siamese architecture. """
@@ -189,13 +158,13 @@ class SiameseClassifier(nn.Module):
         output_p2 = self.encoder_protein2(p2)
         output_d2 = self.encoder_dna2(d2)
 
-        p1 = output_p1.contiguous().view(-1, p1.size(1), hidden_size * 2)
-        d1 = output_d1.contiguous().view(-1, d1.size(1), hidden_size * 2)
+        p1 = output_p1.contiguous().view(-1, p1.size(1), self.hidden_size * 2)
+        d1 = output_d1.contiguous().view(-1, d1.size(1), self.hidden_size * 2)
 
         h1 = self.feature_extractor_module(p1, d1)
 
-        p2 = output_p2.contiguous().view(-1, p1.size(1), hidden_size * 2)
-        d2 = output_d2.contiguous().view(-1, d1.size(1), hidden_size * 2)
+        p2 = output_p2.contiguous().view(-1, p1.size(1), self.hidden_size * 2)
+        d2 = output_d2.contiguous().view(-1, d1.size(1), self.hidden_size * 2)
 
         h2 = self.feature_extractor_module(p2, d2)
 
@@ -204,16 +173,6 @@ class SiameseClassifier(nn.Module):
         rank = self.Sigmoid_activation(y_hat1 - y_hat2)
 
         return rank
-        # # Obtain similarity score predictions by calculating the Manhattan distance between sentence encodings
-        # if self.batch_size == 1:
-        #     self.prediction = torch.exp(-torch.norm((self.encoding_a - self.encoding_b), 1))
-        # else:
-        #     self.prediction = torch.exp(-torch.norm((self.encoding_a - self.encoding_b), 1, 1))
-
-    def get_loss(self):
-        """ Calculates the MSE loss between the network predictions and the ground truth. """
-        # Loss is the L1 norm of the difference between the obtained sentence encodings
-        self.loss = self.loss_function(self.prediction, self.labels)
 
     def initialize_parameters(self):
         """ Initializes network parameters. """
@@ -235,25 +194,5 @@ class SiameseClassifier(nn.Module):
                 start, end = bias_length // 4, bias_length // 2
                 state_dict_d[key][start:end].fill_(2.5)
         self.encoder_dna1.load_state_dict(state_dict_d)
-# -- train --
-# Get batches
-# self.batch_a = train_batch_a
-# self.batch_b = train_batch_b
-# self.labels = train_labels
-#
-# # Get batch_size for current batch
-# self.batch_size = self.batch_a.size(1)
-#
-# # Get gradients
-# self.forward()
-# self.encoder_protein1.zero_grad()  # encoder_protein1 == encoder_protein2
-# self.get_loss()
-# self.loss.backward()
-#
-# # Clip gradients
-# clip_grad_norm(self.encoder_protein1.parameters(), self.opt.clip_value)
-#
-# # Optimize
-# self.optimizer_a.step()
 
 
