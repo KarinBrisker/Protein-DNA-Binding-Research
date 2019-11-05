@@ -37,18 +37,18 @@ class Dictionary(object):
     def len_dna(self):
         return len(self.idx2dna)
 
-
-"""
-batch contains proteins, proteins2, dnas, dnas2, labels
-"""
-
-
-def get_dataset_info(batch):
-    return batch[:, 1:201].clone().detach().view(-1, 200).long(), \
-           batch[:, 201:401].clone().detach().view(-1, 200).long(), \
-           batch[:, 401:417].clone().detach().view(-1, 16).long(), \
-           batch[:, 417:433].clone().detach().long().view(-1, 16), \
-           batch[:, 433].clone().detach().view(-1, 1)
+#
+# """
+# batch contains proteins, proteins2, dnas, dnas2, labels
+# """
+#
+#
+# def get_dataset_info(batch):
+#     return batch[:, 1:201].clone().detach().view(-1, 200).long(), \
+#            batch[:, 201:401].clone().detach().view(-1, 200).long(), \
+#            batch[:, 401:417].clone().detach().view(-1, 16).long(), \
+#            batch[:, 417:433].clone().detach().long().view(-1, 16), \
+#            batch[:, 433].clone().detach().view(-1, 1)
 
 
 """
@@ -62,44 +62,29 @@ output for each sample:
 
 
 class ProteinsDataset(Dataset):
-    def __init__(self, proteins, proteins_names, dna, label, amino_acids, device):
+    # "protein", "protein_name", "dna1", "score1", "dna2", "score2"]
+    def __init__(self, proteins, proteins_names, dna1, score1, dna2, score2, amino_acids, device):
         self.amino_acids = amino_acids
         self.device = device
-        all_proteins = torch.stack(list(proteins))
-        all_dnas = torch.stack(list(dna))
-        all_labels = torch.tensor(list(label))
-        combined = list(zip(list(proteins), list(proteins_names), list(dna), list(label)))
-        random.shuffle(combined)
-        proteins2, proteins_names2, dna2, label2 = zip(*combined)
-        all_proteins2 = torch.stack(list(proteins2))
-        all_dnas2 = torch.stack(list(dna2))
-        all_labels2 = torch.tensor(list(label2))
-        diff = abs(all_labels - all_labels2) > 0.2
-        label = torch.tensor([1 if (all_labels[i] - all_labels2[i]) > 0 else 0 for i in range(len(diff))])
-        batch = torch.cat([diff.view(-1,1).double(), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
-                           all_dnas2.double(), label.view(-1,1).double()], dim=1)
-        batch = batch[(batch[:, 0] == 1).nonzero().squeeze(1)]
-        proteins, proteins2, dnas, dnas2, labels = get_dataset_info(batch)
-        self.amino_acids = amino_acids
-        self.all_proteins = proteins.to(self.device)
-        self.all_dnas = dnas.to(self.device)
-        self.all_labels = labels.squeeze(1).double().to(self.device)
-        self.amino_acids1 = [self.amino_acids[x] for x in proteins_names]
-        self.all_proteins2 = proteins2.to(self.device)
-        self.all_dnas2 = dnas2.to(self.device)
-        self.amino_acids2 = [self.amino_acids[x] for x in proteins_names2]
+        self.proteins_ = torch.stack(list(proteins)).to(self.device)
+
+        self.dnas1_ = torch.stack(list(dna1)).to(self.device)
+        self.scores1_ = torch.tensor(list(score1))
+
+        self.dnas2_ = torch.stack(list(dna2)).to(self.device)
+        self.scores2_ = torch.tensor(list(score2))
+
+        self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
+
+        self.labels_ = torch.tensor([1 if (score1[i] - score2[i]) > 0 else 0 for i in range(len(score1))]).to(self.device).double()
 
     def __len__(self):
-        return len(self.all_labels)
+        return len(self.labels_)
 
     def __getitem__(self, idx):
-        protein = self.all_proteins[idx]
-        dna = self.all_dnas[idx]
-        label = self.all_labels[idx]
-        amino_acids = self.amino_acids1[idx].double().to(self.device)
-
-        protein2 = self.all_proteins2[idx]
-        dna2 = self.all_dnas2[idx]
-        amino_acids2 = self.amino_acids2[idx].double().to(self.device)
-
-        return protein, dna, label, amino_acids, protein2, dna2, amino_acids2
+        protein = self.proteins_[idx]
+        dna = self.dnas1_[idx]
+        label = self.labels_[idx]
+        amino_acids = self.amino_acids_[idx].double().to(self.device)
+        dna2 = self.dnas2_[idx]
+        return protein, dna, label, amino_acids, dna2

@@ -25,18 +25,20 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--input_size', type=float, default=128, help='input size')
     parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
-    parser.add_argument('--num_layers', type=float, default=2, help='num layers bi-lstm')
+    parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--embedding_dim', type=float, default=64, help='embedding dim of each nucleotide and amino-acid')
+    parser.add_argument('--embedding_dim', type=float, default=64,
+                        help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--logging_output', type=str, default='running_outputMSE.txt', help='logging output file name')
-    parser.add_argument('--dropout', type=float, default=0.5, help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
+    parser.add_argument('--dropout', type=float, default=0.4,
+                        help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
     args = parser.parse_args()
     return args
 
@@ -52,7 +54,7 @@ def init_amino_acid_data():
     print('loading amino acids embeddings')
     embeddings = {}
     for p in tqdm(dict.proteins):
-        path = '../DNA_data/amino_acid_data/'+p+'.txt'
+        path = '../DNA_data/amino_acid_data/' + p + '.txt'
         emb = []
         with open(path, 'r') as f:
             emb_amino_acids = f.readlines()
@@ -82,16 +84,23 @@ def get_proteins_data(proteins):
     for p in tqdm(proteins):
         path = '../DNA_data/data/' + p + '.txt'
         curr_p_df = pd.read_csv(path, sep="\t")
-        curr_p_df.columns = ["d1", "d2", "score"]
-        curr_p_df["dna"] = (curr_p_df["d1"] + curr_p_df["d2"]).apply(lambda x: dna2idx(x))
+        curr_p_df.columns = ["d1", "d2", "score1"]
+        curr_p_df["dna1"] = (curr_p_df["d1"] + curr_p_df["d2"]).apply(lambda x: dna2idx(x))
         protein = list(dict.amino_acids2idx[c] for c in list(dict.protein2seq[p]) if c in dict.amino_acids)
         protein += [dict.amino_acids2idx['#']] * (200 - len(protein))
         curr_p_df["protein"] = [torch.LongTensor(protein)] * curr_p_df.shape[0]
         curr_p_df["protein_name"] = [p] * curr_p_df.shape[0]
-
-        curr_p_array = np.array(curr_p_df[["protein", "protein_name", "dna", "score"]].values)
+        second_dna = np.array(curr_p_df[["dna1", "score1"]].values)
+        random.shuffle(second_dna)
+        curr_p_df = pd.concat([curr_p_df, pd.DataFrame(second_dna, columns=['dna2', 'score2'])], axis=1)
+        curr_p_df["diff"] = abs(curr_p_df["score1"] - curr_p_df["score2"]) > 0.2
+        # remove rows if 2 dna's are close, and if it's the same dna(the first condition captures both)
+        df = curr_p_df[curr_p_df["diff"] == True]
+        curr_p_array = np.array(df[["protein", "protein_name", "dna1", "score1", "dna2", "score2"]].values)
         data.append(curr_p_array)
-    return np.concatenate(data, axis=0)
+    output = np.concatenate(data, axis=0)
+    random.shuffle(output)
+    return output
 
 
 """
@@ -102,9 +111,9 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    train_proteins, dev_proteins, test_proteins = proteins[:1], proteins[1:2], proteins[2:3]
+    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+    proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -132,9 +141,9 @@ def train(args, model, train_loader, optimizer, params, criterion):
     total_loss, correct = 0., 0
     for i, data in enumerate(tqdm(train_loader), 0):
         model.zero_grad()
-        # get the inputs
-        proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
-        prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+        # get the inputs - protein, dna, label, amino_acids, dna2
+        proteins, dnas1, labels, amino_acids, dnas2 = data
+        prediction = model(proteins, dnas1, dnas2, amino_acids)
         correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels)
@@ -146,12 +155,13 @@ def train(args, model, train_loader, optimizer, params, criterion):
         total_loss += loss.item()
         all_predictions += prediction.squeeze().int().tolist()
         all_targets += labels.int().tolist()
-    logging.info('-' * 89 + '\n')
     logging.info(confusion_matrix(all_targets, all_predictions))
-    logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.8f}'
-         '| train recall {:5.8f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct /
-                count, optimizer.param_groups[0]['lr'], precision_score(all_targets,  all_predictions), recall_score(
-        all_targets, all_predictions)))
+    logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.4f}'
+                 '| train recall {:5.4f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count,
+                                                 100.0 * correct /
+                                                 count, optimizer.param_groups[0]['lr'],
+                                                 precision_score(all_targets, all_predictions)*100, recall_score(
+            all_targets, all_predictions)*100))
 
 
 """
@@ -169,21 +179,20 @@ def test(model, test_loader, criterion):
         correct = 0
         count = 0
         for i, data in enumerate(tqdm(test_loader), 0):
-            proteins, dnas, labels, amino_acids, proteins2, dnas2, amino_acids2 = data
-            prediction = model(proteins, proteins2, dnas, dnas2, amino_acids, amino_acids2)
+            proteins, dnas1, labels, amino_acids, dnas2 = data
+            prediction = model(proteins, dnas1, dnas2, amino_acids)
             correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
             count += len(prediction)
             loss = criterion(prediction.squeeze(), labels)
             total_loss += loss.item()
             all_predictions += prediction.squeeze().int().tolist()
             all_targets += labels.int().tolist()
-        logging.info('\n')
         logging.info(confusion_matrix(all_targets, all_predictions))
-        logging.info(f'test precision: {precision_score(all_targets, all_predictions)}, test recall: {recall_score(all_targets, all_predictions)}')
-        logging.info('-' * 89)
-        logging.info('| time: {:5.2f}s | test loss {:5.8f} | test accuracy {:4.6f}'.format(
-            (time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct / count))
-
+        logging.info('| time: {:5.2f}s | test loss {:5.8f} | test accuracy {:4.6f} | test precision {:5.4f}'
+                 '| test recall {:5.4f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count,
+                                                 100.0 * correct /
+                                                 count, precision_score(all_targets, all_predictions) * 100, recall_score(
+            all_targets, all_predictions)*100))
 
 """
 main function
@@ -191,7 +200,8 @@ main function
 
 
 def create_dataset_loader(data, amino_acids_emb, device, args):
-    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb, device)
+    # "protein", "protein_name", "dna1", "score1", "dna2", "score2"]
+    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], data[:, 4], data[:, 5], amino_acids_emb, device)
     loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     return loader
 
@@ -230,13 +240,14 @@ def main():
     optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay, betas=(args.beta, 0.999))
 
     # if not os.path.isdir(args.save_dir):
-        # os.makedirs(args.save_dir)
+    # os.makedirs(args.save_dir)
 
-    print('\n\n --------- training --------\n')
+    print('\n --------- training --------\n')
     for epoch in range(1, args.epochs):
-        logging.info('epoch: ' + str(epoch))
+        logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
         train(args, model, train_loader, optimizer, params, criterion)
-        test(model, dev_loader, criterion)
+        # test(model, dev_loader, criterion)
+        logging.info('-' * 89)
     test(model, test_loader, criterion)
 
 

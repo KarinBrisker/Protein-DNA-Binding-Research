@@ -148,44 +148,32 @@ class SiameseClassifier(nn.Module):
         self.device = device
         self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
 
-    def forward(self, p1, p2, d1, d2, amino_acids1, amino_acids2):
+    def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
-        amino_acids1 = self.ReLU_activation(self.features_linear_layer(amino_acids1))
-        amino_acids2 = self.ReLU_activation(self.features_linear_layer(amino_acids2))
+        amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
+        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        # concat learnable embeddings to amino-acids features
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
+        output_p = self.encoder_protein1(p)
+        p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
 
-        p1 = self.embedding_amino_acids(p1)  # p: (batch_size x l_p x embedding_dim)
-        p2 = self.embedding_amino_acids(p2)  # p: (batch_size x l_p x embedding_dim)
         d1 = self.embedding_nucleotides(d1)
         d2 = self.embedding_nucleotides(d2)
 
-        # concat learnable embeddings to amino-acids features
-        p1 = self.ReLU_activation(self.dense_protein(torch.cat([p1, amino_acids1], dim=2)))
-        p2 = self.ReLU_activation(self.dense_protein(torch.cat([p2, amino_acids2], dim=2)))
-
-        # Obtain sentence encodings from each encoder
-        output_p1 = self.encoder_protein1(p1)
         output_d1 = self.encoder_dna1(d1)
-
-        output_p2 = self.encoder_protein1(p2)
         output_d2 = self.encoder_dna1(d2)
 
-        p1 = output_p1.contiguous().view(-1, p1.size(1), self.hidden_size)
         d1 = output_d1.contiguous().view(-1, d1.size(1), self.hidden_size)
-
-        # h1 - (bs * hidden_dim)
-        h1 = self.feature_extractor_module(p1, d1)
-
-        p2 = output_p2.contiguous().view(-1, p1.size(1), self.hidden_size)
         d2 = output_d2.contiguous().view(-1, d1.size(1), self.hidden_size)
 
-        # h2 - (bs * hidden_dim)
-        h2 = self.feature_extractor_module(p2, d2)
+        # h1, h2 - (bs * hidden_dim)
+        h1 = self.feature_extractor_module(p, d1)
+        h2 = self.feature_extractor_module(p, d2)
 
-        # y_hat - (bs * 1)  -> (-0.2) to (+0.2)
-        # the score of the first pair
+        # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the first and the second pair
         y_hat1 = self.output_fc(h1)
-        # the score of the second pair
         y_hat2 = self.output_fc(h2)
+
         # sigmoid -> 0 to 1, if less than 0.5 means second is higher
         rank = self.Sigmoid_activation(y_hat1 - y_hat2)
         # print(rank)
