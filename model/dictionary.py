@@ -1,4 +1,3 @@
-import random
 from torch.utils.data import Dataset
 import torch
 
@@ -36,19 +35,6 @@ class Dictionary(object):
 
     def len_dna(self):
         return len(self.idx2dna)
-
-#
-# """
-# batch contains proteins, proteins2, dnas, dnas2, labels
-# """
-#
-#
-# def get_dataset_info(batch):
-#     return batch[:, 1:201].clone().detach().view(-1, 200).long(), \
-#            batch[:, 201:401].clone().detach().view(-1, 200).long(), \
-#            batch[:, 401:417].clone().detach().view(-1, 16).long(), \
-#            batch[:, 417:433].clone().detach().long().view(-1, 16), \
-#            batch[:, 433].clone().detach().view(-1, 1)
 
 
 """

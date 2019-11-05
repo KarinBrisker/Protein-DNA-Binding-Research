@@ -16,6 +16,7 @@ import torch.nn as nn
 import pandas as pd
 from sklearn.metrics import precision_score, recall_score, confusion_matrix
 import logging
+from torch.nn import DataParallel
 
 
 # Hyper-parameters
@@ -246,7 +247,7 @@ def main():
     for epoch in range(1, args.epochs):
         logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
         train(args, model, train_loader, optimizer, params, criterion)
-        # test(model, dev_loader, criterion)
+        test(model, dev_loader, criterion)
         logging.info('-' * 89)
     test(model, test_loader, criterion)
 
