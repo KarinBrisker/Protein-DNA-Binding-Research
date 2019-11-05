@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/karin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/karin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/dictionary.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
     </list>
@@ -15,15 +13,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1572788961863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1572880188546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="225" column="25" lean-forward="true" selection-start-line="225" selection-start-column="25" selection-end-line="225" selection-end-column="25" />
+            <state relative-caret-position="137">
+              <caret line="192" column="4" selection-start-line="192" selection-start-column="4" selection-end-line="192" selection-end-column="4" />
               <folding>
                 <element signature="e#16#31#0" expanded="true" />
               </folding>
@@ -31,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/dictionary.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="78" selection-start-line="78" selection-end-line="78" />
+            <state relative-caret-position="915">
+              <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -46,11 +44,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1800">
-              <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+            <state relative-caret-position="1950">
+              <caret line="134" selection-start-line="134" selection-end-line="134" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/modules/activation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1110">
+              <caret line="80" column="8" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="16" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -68,28 +84,13 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.to(device)</find>
-      <find>bce</find>
-      <find>float()</find>
-      <find>loss =</find>
-      <find>activation</find>
-      <find>get_loss</find>
-      <find>zero_g</find>
-      <find>num_classes</find>
-      <find>embedding_dim</find>
-      <find>input_size</find>
-      <find>hidden_size</find>
-      <find>num_layers</find>
-      <find>learning_rate</find>
       <find>beta</find>
       <find>num_amino_acids</find>
       <find>num_nucleotides</find>
       <find>model =</find>
-      <find>output_fc</find>
       <find>initialize_parameters</find>
       <find>device</find>
       <find>ProteinVectorsDataset</find>
-      <find>model =</find>
       <find>train_set</find>
       <find>get_proteins_data</find>
       <find>init_dataset</find>
@@ -97,7 +98,22 @@
       <find>cuda</find>
       <find>Decomposable_Attention</find>
       <find>get_dataset_info</find>
+      <find>bce</find>
+      <find>CUDA</find>
+      <find>amino_acids2idx</find>
+      <find>train_loader</find>
+      <find>ProteinsDataset</find>
       <find>create_dataset_loader</find>
+      <find>logging_output</find>
+      <find>encoder_protein2</find>
+      <find>train loss</find>
+      <find>optimizer_a</find>
+      <find>output_fc</find>
+      <find>ReLU</find>
+      <find>ReLU_activation</find>
+      <find>optimizer =</find>
+      <find>DecomposableAttention</find>
+      <find>train loss</find>
     </findStrings>
     <replaceStrings>
       <replace>ProteinVectorsDataset</replace>
@@ -112,8 +128,8 @@
       <replace>Decomposable_Attention</replace>
       <replace>dict</replace>
       <replace>DecomposableAttention</replace>
-      <replace>ProteinsDataset</replace>
       <replace>print</replace>
+      <replace>ProteinsDataset</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -125,16 +141,16 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/model/tmp.py" />
         <option value="$PROJECT_DIR$/model/dictionary.py" />
-        <option value="$PROJECT_DIR$/model/model.py" />
         <option value="$PROJECT_DIR$/model/main.py" />
+        <option value="$PROJECT_DIR$/model/model.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="55" />
-    <option name="y" value="291" />
-    <option name="width" value="1835" />
-    <option name="height" value="789" />
+    <option name="y" value="25" />
+    <option name="width" value="1865" />
+    <option name="height" value="1055" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -142,7 +158,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -159,6 +174,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -258,17 +274,47 @@
       <workItem from="1572369368438" duration="6387000" />
       <workItem from="1572417925213" duration="32071000" />
       <workItem from="1572513107869" duration="17388000" />
-      <workItem from="1572776230143" duration="11001000" />
+      <workItem from="1572776230143" duration="12510000" />
+      <workItem from="1572857167026" duration="2571000" />
+      <workItem from="1572861219051" duration="14201000" />
+      <workItem from="1572947557711" duration="599000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84303000" />
+    <option name="totallyTimeSpent" value="103183000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.01649258" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.2017592" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46544278" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.38660908" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
+      <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
+      <window_info anchor="bottom" id="Database Changes" order="10" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.18534483" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.32937366" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
+      <window_info anchor="right" id="SciView" order="4" />
+      <window_info anchor="right" id="Database" order="5" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.50457036" side_tool="true" visible="true" weight="0.101154484" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -282,17 +328,17 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
       <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.18574513" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.18534483" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.32937366" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" sideWeight="0.5009141" side_tool="true" visible="true" weight="0.3073117" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.49908593" visible="true" weight="0.3073117" />
+      <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" visible="true" weight="0.101154484" />
       <window_info anchor="right" id="SciView" order="4" />
       <window_info anchor="right" id="Database" order="5" />
-    </layout>
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.50457036" side_tool="true" visible="true" weight="0.101154484" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -346,9 +392,9 @@
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>225</line>
-          <option name="timeStamp" value="37" />
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>189</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -430,47 +476,47 @@ logging.info(
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>train_data[:, 3]</expression-string>
+        <expression-string>out[:, -1, :]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>train_data[:, 2]</expression-string>
+        <expression-string>print(self.Sigmoid_activation(y_hat1 - y_hat2))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>train_data[:, 1]</expression-string>
+        <expression-string>self.Sigmoid_activation(y_hat1 - y_hat2)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>train_data[:, 0]</expression-string>
+        <expression-string>self.H(v1_cat_v2)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>list(params_model)</expression-string>
+        <expression-string>torch.sum(v1.view(-1, l_a, self.hidden_dim), dim=1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>emb += [np.array(np.zeros(11))] * (200 - len(emb_amino_acids))</expression-string>
+        <expression-string>a_cat_beta.view(-1, self.hidden_dim)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>[np.array(np.zeros(11))] * (200 - len(emb_amino_acids))</expression-string>
+        <expression-string>a_cat_beta.view(-1, 2 * self.hidden_dim)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>[np.array(np.zeros(11))] * 200 - len(emb_amino_acids)</expression-string>
+        <expression-string>(a_cat_beta.view(-1, 2 * self.hidden_dim).double())</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>[np.array(np.zeros(11))] * 100</expression-string>
+        <expression-string>self.G(a_cat_beta.view(-1, 2 * self.hidden_dim).double())</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -494,27 +540,10 @@ logging.info(
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1800">
-          <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="225" column="25" lean-forward="true" selection-start-line="225" selection-start-column="25" selection-end-line="225" selection-end-column="25" />
+        <state relative-caret-position="137">
+          <caret line="192" column="4" selection-start-line="192" selection-start-column="4" selection-end-line="192" selection-end-column="4" />
           <folding>
             <element signature="e#16#31#0" expanded="true" />
           </folding>
@@ -523,11 +552,42 @@ logging.info(
     </entry>
     <entry file="file://$PROJECT_DIR$/model/dictionary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="78" selection-start-line="78" selection-end-line="78" />
+        <state relative-caret-position="915">
+          <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1950">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/modules/activation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1110">
+          <caret line="80" column="8" selection-start-line="80" selection-start-column="8" selection-end-line="80" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="16" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>

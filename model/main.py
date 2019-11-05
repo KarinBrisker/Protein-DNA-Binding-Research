@@ -25,7 +25,7 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--input_size', type=float, default=128, help='input size')
@@ -35,7 +35,7 @@ def parse_args():
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
     parser.add_argument('--embedding_dim', type=float, default=64, help='embedding dim of each nucleotide and amino-acid')
-    parser.add_argument('--logging_output', type=str, default='running_output.txt', help='logging output file name')
+    parser.add_argument('--logging_output', type=str, default='running_outputMSE.txt', help='logging output file name')
     parser.add_argument('--dropout', type=float, default=0.5, help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
     args = parser.parse_args()
     return args
@@ -57,12 +57,9 @@ def init_amino_acid_data():
         with open(path, 'r') as f:
             emb_amino_acids = f.readlines()
             for emb_amino in emb_amino_acids:
-                # + '\t0' - dummy, so we have even length
                 e = np.fromstring(emb_amino.strip(), dtype=float, sep='\t')
                 emb.append(torch.tensor(e))
             emb += [np.array(np.zeros(11))] * (200 - len(emb_amino_acids))
-            protein_data = [dict.amino_acids2idx[c] for c in list(dict.protein2seq[p]) if c in dict.amino_acids]
-            protein_data += [dict.amino_acids2idx['#']] * (200 - len(protein_data))
             embeddings[p] = torch.tensor(np.stack(emb, axis=0))
     return embeddings
 
@@ -105,9 +102,9 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    # train_proteins, dev_proteins, test_proteins = proteins[:1], proteins[1:2], proteins[2:3]
+    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+    # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    train_proteins, dev_proteins, test_proteins = proteins[:1], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -206,7 +203,7 @@ main function
 
 def main():
     args = parse_args()
-    logging.basicConfig(filename=args.logging_output, level=logging.DEBUG, filemode='w')
+    # logging.basicConfig(filename=args.logging_output, level=logging.DEBUG, filemode='w')
     args.save_dir = os.path.join('../model', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     logging.getLogger().setLevel(logging.INFO)
 
@@ -218,7 +215,7 @@ def main():
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     np.random.seed(1234)
-    device = torch.device("cuda:0")
+    device = torch.device("cuda:2")
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
     model = SiameseClassifier(args, device).double().to(device)
@@ -230,9 +227,10 @@ def main():
     criterion = nn.BCELoss().to(device)
     params_model = filter(lambda p: p.requires_grad, model.parameters())
     params = list(params_model) + list(criterion.parameters())
-    optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
-    if not os.path.isdir(args.save_dir):
-        os.makedirs(args.save_dir)
+    optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay, betas=(args.beta, 0.999))
+
+    # if not os.path.isdir(args.save_dir):
+        # os.makedirs(args.save_dir)
 
     print('\n\n --------- training --------\n')
     for epoch in range(1, args.epochs):
