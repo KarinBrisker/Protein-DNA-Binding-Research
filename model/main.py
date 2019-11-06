@@ -20,7 +20,7 @@ from torch.nn import DataParallel
 
 
 # Hyper-parameters
-def parse_args():
+def parse_args(filename):
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
     parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
@@ -37,9 +37,10 @@ def parse_args():
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
-    parser.add_argument('--logging_output', type=str, default='running_outputMSE.txt', help='logging output file name')
     parser.add_argument('--dropout', type=float, default=0.4,
                         help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
+    logging.basicConfig(filename=filename+'.txt', level=logging.DEBUG, filemode='w')
+
     args = parser.parse_args()
     return args
 
@@ -112,10 +113,15 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    # TODO: return from note
-    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
+    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+                        proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    logging.info('train proteins:\n')
+    logging.info(train_proteins)
+    logging.info('dev proteins:\n')
+    logging.info(dev_proteins)
+    logging.info('test proteins:\n')
+    logging.info(test_proteins)
+    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -150,11 +156,6 @@ def train(args, model, train_loader, optimizer, params, criterion):
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels)
         optimizer.zero_grad()
-        # for z in list(filter(lambda p: p.requires_grad, model.parameters())):
-        #     print(z.dtype)
-        #     print(z.device)
-        # exit()
-        loss = loss.double()
         loss.backward()
         # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
         torch.nn.utils.clip_grad_norm_(params, args.clip)
@@ -219,10 +220,9 @@ main function
 
 
 def main():
-    args = parse_args()
-    # TODO: return from note
-    # logging.basicConfig(filename=args.logging_output, level=logging.DEBUG, filemode='w')
-    args.save_dir = os.path.join('../model', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
+    args = parse_args(file_name)
+    args.save_dir = os.path.join('../model', file_name)
     logging.getLogger().setLevel(logging.INFO)
 
     logging.info("\nParameters:")
@@ -248,9 +248,8 @@ def main():
     params = list(params_model) + list(criterion.parameters())
     optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay, betas=(args.beta, 0.999))
 
-    # TODO: return from note
-    # if not os.path.isdir(args.save_dir):
-    # os.makedirs(args.save_dir)
+    if not os.path.isdir(args.save_dir):
+        os.makedirs(args.save_dir)
 
     print('\n --------- training --------\n')
     for epoch in range(1, args.epochs):

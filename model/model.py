@@ -2,7 +2,6 @@ import torch.nn.functional as F
 from torch.nn.init import xavier_normal_
 import torch.nn as nn
 import torch
-import torch.optim as optim
 
 torch.backends.cudnn.enabled = False
 
@@ -102,6 +101,7 @@ class BiLSTM(nn.Module):
         # Default: 1
         self.lstm = nn.LSTM(input_size, self.hidden_size, self.num_layers, dropout=args.dropout, batch_first=True,
                             bidirectional=True)
+        self.initialize_parameters()
         self.fc = nn.Linear(self.hidden_size * 2, self.hidden_size)  # 2 for bidirectional
 
     # x- (bs, protein_len, embedding_size)
@@ -117,6 +117,22 @@ class BiLSTM(nn.Module):
 
         # out- (bs, protein_len, hidden_size)
         return out
+
+    def initialize_parameters(self):
+        """ Initializes network parameters. """
+        list_params = [self.lstm]
+        for param in list_params:
+            state_dict_p = param.state_dict()
+            for key in state_dict_p.keys():
+                if '.weight' in key:
+                    try:
+                        state_dict_p[key] = xavier_normal_(state_dict_p[key])
+                    except: continue
+                if '.bias' in key:
+                    bias_length = state_dict_p[key].size()[0]
+                    start, end = bias_length // 4, bias_length // 2
+                    state_dict_p[key][start:end].fill_(2.5)
+            param.load_state_dict(state_dict_p)
 
 
 class SiameseClassifier(nn.Module):
@@ -140,11 +156,12 @@ class SiameseClassifier(nn.Module):
         self.encoder_protein1 = BiLSTM(args, args.input_size, device)
         # Initialize constituent network
         self.encoder_dna1 = BiLSTM(args, int(args.input_size / 2), device)
+        self.feature_extractor_module = DecomposableAttention(self.hidden_size)
+        self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
+
         # Initialize network parameters
         self.initialize_parameters()
-        self.feature_extractor_module = DecomposableAttention(self.hidden_size)
         self.device = device
-        self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
 
     def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
@@ -179,21 +196,16 @@ class SiameseClassifier(nn.Module):
 
     def initialize_parameters(self):
         """ Initializes network parameters. """
-        state_dict_p = self.encoder_protein1.state_dict()
-        for key in state_dict_p.keys():
-            if '.weight' in key:
-                state_dict_p[key] = xavier_normal_(state_dict_p[key])
-            if '.bias' in key:
-                bias_length = state_dict_p[key].size()[0]
-                start, end = bias_length // 4, bias_length // 2
-                state_dict_p[key][start:end].fill_(2.5)
-        self.encoder_protein1.load_state_dict(state_dict_p)
-        state_dict_d = self.encoder_dna1.state_dict()
-        for key in state_dict_d.keys():
-            if '.weight' in key:
-                state_dict_d[key] = xavier_normal_(state_dict_d[key])
-            if '.bias' in key:
-                bias_length = state_dict_d[key].size()[0]
-                start, end = bias_length // 4, bias_length // 2
-                state_dict_d[key][start:end].fill_(2.5)
-        self.encoder_dna1.load_state_dict(state_dict_d)
+        list_params = [self.encoder_protein1, self.encoder_dna1]
+        for param in list_params:
+            state_dict_p = param.state_dict()
+            for key in state_dict_p.keys():
+                if '.weight' in key:
+                    try:
+                        state_dict_p[key] = xavier_normal_(state_dict_p[key])
+                    except: continue
+                if '.bias' in key:
+                    bias_length = state_dict_p[key].size()[0]
+                    start, end = bias_length // 4, bias_length // 2
+                    state_dict_p[key][start:end].fill_(2.5)
+            param.load_state_dict(state_dict_p)
