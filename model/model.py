@@ -101,22 +101,20 @@ class BiLSTM(nn.Module):
         # form a stacked LSTM, with the second LSTM taking in outputs of the first LSTM and computing the final results.
         # Default: 1
         self.lstm = nn.LSTM(input_size, self.hidden_size, self.num_layers, dropout=args.dropout, batch_first=True,
-                            bidirectional=True).float().to(device)
+                            bidirectional=True)
         self.fc = nn.Linear(self.hidden_size * 2, self.hidden_size)  # 2 for bidirectional
 
     # x- (bs, protein_len, embedding_size)
     def forward(self, x):
         # Set initial states
         # sending tensors to the device of the input -> important for data parallelism
-        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)  # 2 for bidirectional
-        c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).float().to(x.device)
+        h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).double().to(x.device)  # 2 for bidirectional
+        c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).double().to(x.device)
 
-        # Forward propagate LSTM
-        x = x.float()
-        # out: tensor of shape (batch_size, seq_length, hidden_size * num directions)
-        out, _ = self.lstm.float()(x, (h0, c0))
-        #
-        out = self.fc.float()(out)
+        # Forward propagate LSTM. out: tensor of shape (batch_size, seq_length, hidden_size * num directions)
+        out, _ = self.lstm(x, (h0, c0))
+        out = self.fc(out)
+
         # out- (bs, protein_len, hidden_size)
         return out
 
@@ -139,9 +137,9 @@ class SiameseClassifier(nn.Module):
         # dna
         self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
         # Initialize constituent network
-        self.encoder_protein1 = BiLSTM(args, args.input_size, device).float().to(device)
+        self.encoder_protein1 = BiLSTM(args, args.input_size, device)
         # Initialize constituent network
-        self.encoder_dna1 = BiLSTM(args, int(args.input_size / 2), device).float().to(device)
+        self.encoder_dna1 = BiLSTM(args, int(args.input_size / 2), device)
         # Initialize network parameters
         self.initialize_parameters()
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)

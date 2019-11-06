@@ -112,9 +112,10 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
+    # TODO: return from note
+    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+    # proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -149,6 +150,11 @@ def train(args, model, train_loader, optimizer, params, criterion):
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels)
         optimizer.zero_grad()
+        # for z in list(filter(lambda p: p.requires_grad, model.parameters())):
+        #     print(z.dtype)
+        #     print(z.device)
+        # exit()
+        loss = loss.double()
         loss.backward()
         # `clip_grad_norm` helps prevent the exploding gradient problem in RNNs / LSTMs.
         torch.nn.utils.clip_grad_norm_(params, args.clip)
@@ -214,6 +220,7 @@ main function
 
 def main():
     args = parse_args()
+    # TODO: return from note
     # logging.basicConfig(filename=args.logging_output, level=logging.DEBUG, filemode='w')
     args.save_dir = os.path.join('../model', datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     logging.getLogger().setLevel(logging.INFO)
@@ -230,6 +237,7 @@ def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
     model = SiameseClassifier(args, device).double().to(device)
+    model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
     print('create data loaders')
     train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
     dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
@@ -240,6 +248,7 @@ def main():
     params = list(params_model) + list(criterion.parameters())
     optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay, betas=(args.beta, 0.999))
 
+    # TODO: return from note
     # if not os.path.isdir(args.save_dir):
     # os.makedirs(args.save_dir)
 

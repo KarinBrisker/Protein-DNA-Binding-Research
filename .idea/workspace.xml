@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/model/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,15 +13,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1572972629532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1573022112831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="102" column="17" lean-forward="true" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
+            <state relative-caret-position="278">
+              <caret line="246" column="19" selection-start-line="246" selection-start-column="11" selection-end-line="246" selection-end-column="19" />
               <folding>
                 <element signature="e#16#31#0" expanded="true" />
               </folding>
@@ -28,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="96" column="43" lean-forward="true" selection-start-line="96" selection-start-column="43" selection-end-line="96" selection-end-column="43" />
+            <state relative-caret-position="177">
+              <caret line="103" column="47" selection-start-line="103" selection-start-column="47" selection-end-line="103" selection-end-column="47" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -52,7 +53,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
+            <state relative-caret-position="26100">
               <caret line="1740" selection-start-line="1740" selection-end-line="1740" />
             </state>
           </provider>
@@ -73,9 +74,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>bce</find>
-      <find>CUDA</find>
-      <find>amino_acids2idx</find>
       <find>logging_output</find>
       <find>encoder_protein2</find>
       <find>optimizer_a</find>
@@ -93,23 +91,25 @@
       <find>train_loader</find>
       <find>ProteinsDataset</find>
       <find>create_dataset_loader</find>
-      <find>train loss</find>
       <find>confu</find>
       <find>train(</find>
-      <find>train loss</find>
       <find>datalo</find>
       <find>print(</find>
       <find>85</find>
       <find>0.2</find>
       <find>== 0</find>
       <find>bil</find>
+      <find>crite</find>
+      <find>dt</find>
+      <find>float</find>
+      <find>model =</find>
+      <find>double</find>
     </findStrings>
     <replaceStrings>
       <replace>ProteinVectorsDataset</replace>
       <replace>11</replace>
       <replace>encoder_protein2</replace>
       <replace>state_dict</replace>
-      <replace>double</replace>
       <replace>double()</replace>
       <replace>args.input_size</replace>
       <replace>args.num_nucleotides</replace>
@@ -122,6 +122,7 @@
       <replace>p</replace>
       <replace>amino_acids1</replace>
       <replace>amino_acids</replace>
+      <replace>double</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -132,9 +133,9 @@
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/model/tmp.py" />
-        <option value="$PROJECT_DIR$/model/model.py" />
         <option value="$PROJECT_DIR$/model/dictionary.py" />
         <option value="$PROJECT_DIR$/model/main.py" />
+        <option value="$PROJECT_DIR$/model/model.py" />
       </list>
     </option>
   </component>
@@ -271,22 +272,23 @@
       <workItem from="1572861219051" duration="14201000" />
       <workItem from="1572947557711" duration="3430000" />
       <workItem from="1572952485314" duration="16992000" />
+      <workItem from="1572972876854" duration="2119000" />
+      <workItem from="1573020234562" duration="1962000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123006000" />
+    <option name="totallyTimeSpent" value="127087000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.2017592" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46220303" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.39848813" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.38660908" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -302,9 +304,9 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.49799198" visible="true" weight="0.32985157" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.49551168" visible="true" weight="0.32985157" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.502008" side_tool="true" visible="true" weight="0.32985157" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.50448835" side_tool="true" visible="true" weight="0.32985157" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -386,23 +388,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>146</line>
-          <option name="timeStamp" value="49" />
+          <line>156</line>
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>100</line>
-          <option name="timeStamp" value="50" />
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>110</line>
+          <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>99</line>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>84</line>
-          <option name="timeStamp" value="52" />
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>74</line>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -484,47 +481,47 @@ logging.info(
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>curr_p_df[curr_p_df[&quot;diff&quot;] == True]</expression-string>
+        <expression-string>torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>curr_p_df[&quot;diff&quot;]</expression-string>
+        <expression-string>BiLSTM(args, args.input_size, device)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>curr_p_df.diff</expression-string>
+        <expression-string>print((list(filter(lambda p: p.requires_grad, model.parameters()))[0]).dtype)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>pd.DataFrame(second_dna, columns=['dna2', 'score2'])</expression-string>
+        <expression-string>(list(filter(lambda p: p.requires_grad, model.parameters()))[0]).dtype</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>)</expression-string>
+        <expression-string>(list(filter(lambda p: p.requires_grad, model.parameters()))[0]).dtype()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>random.shuffle(np.array(curr_p_df[[&quot;dna1&quot;, &quot;score1&quot;]].values))</expression-string>
+        <expression-string>(list(filter(lambda p: p.requires_grad, model.parameters()))[0])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.array(curr_p_df[[&quot;dna1&quot;, &quot;score1&quot;]].values)</expression-string>
+        <expression-string>type(list(filter(lambda p: p.requires_grad, model.parameters()))[0])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>out[:, -1, :]</expression-string>
+        <expression-string>list(filter(lambda p: p.requires_grad, model.parameters()))[0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>print(self.Sigmoid_activation(y_hat1 - y_hat2))</expression-string>
+        <expression-string>list(filter(lambda p: p.requires_grad, model.parameters()))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -578,7 +575,7 @@ logging.info(
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
+        <state relative-caret-position="26100">
           <caret line="1740" selection-start-line="1740" selection-end-line="1740" />
         </state>
       </provider>
@@ -592,22 +589,22 @@ logging.info(
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
+    <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="96" column="43" lean-forward="true" selection-start-line="96" selection-start-column="43" selection-end-line="96" selection-end-column="43" />
+        <state relative-caret-position="278">
+          <caret line="246" column="19" selection-start-line="246" selection-start-column="11" selection-end-line="246" selection-end-column="19" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#16#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/main.py">
+    <entry file="file://$PROJECT_DIR$/model/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="102" column="17" lean-forward="true" selection-start-line="102" selection-start-column="17" selection-end-line="102" selection-end-column="17" />
+        <state relative-caret-position="177">
+          <caret line="103" column="47" selection-start-line="103" selection-start-column="47" selection-end-line="103" selection-end-column="47" />
           <folding>
-            <element signature="e#16#31#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
