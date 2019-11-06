@@ -23,7 +23,7 @@ from torch.nn import DataParallel
 def parse_args(filename):
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
     parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
@@ -257,6 +257,8 @@ def main():
         train(args, model, train_loader, optimizer, params, criterion)
         test(model, dev_loader, criterion)
         logging.info('-' * 89)
+        with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
+            torch.save(model.module.state_dict(), f)
     test(model, test_loader, criterion)
 
 
