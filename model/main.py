@@ -23,19 +23,20 @@ from torch.nn import DataParallel
 def parse_args(filename):
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=1e-2, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
-    parser.add_argument('--input_size', type=float, default=128, help='input size')
-    parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
+    parser.add_argument('--input_size', type=float, default=32, help='input size')
+    parser.add_argument('--input_size_dna', type=float, default=32, help='input size')
+    parser.add_argument('--hidden_size', type=float, default=32, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--embedding_dim', type=float, default=64,
+    parser.add_argument('--embedding_dim', type=float, default=32,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
                         help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
@@ -221,6 +222,7 @@ main function
 
 def main():
     file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
+    # file_name = 'del'
     args = parse_args(file_name)
     args.save_dir = os.path.join('../model', file_name)
     logging.getLogger().setLevel(logging.INFO)
@@ -246,7 +248,7 @@ def main():
     criterion = nn.BCELoss().to(device)
     params_model = filter(lambda p: p.requires_grad, model.parameters())
     params = list(params_model) + list(criterion.parameters())
-    optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay, betas=(args.beta, 0.999))
+    optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
 
     if not os.path.isdir(args.save_dir):
         os.makedirs(args.save_dir)

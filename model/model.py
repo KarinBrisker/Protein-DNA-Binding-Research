@@ -95,6 +95,7 @@ class BiLSTM(nn.Module):
         self.device = device
         self.hidden_size = args.hidden_size
         self.num_layers = args.num_layers
+        self.ReLU_activation = nn.ReLU()
         # batch_first – If True, then the input and output tensors are provided as (batch, seq, feature). Default: False
         # num_layers – Number of recurrent layers. E.g., setting num_layers=2 would mean stacking two LSTMs together to
         # form a stacked LSTM, with the second LSTM taking in outputs of the first LSTM and computing the final results.
@@ -113,7 +114,7 @@ class BiLSTM(nn.Module):
 
         # Forward propagate LSTM. out: tensor of shape (batch_size, seq_length, hidden_size * num directions)
         out, _ = self.lstm(x, (h0, c0))
-        out = self.fc(out)
+        out = self.ReLU_activation(self.fc(out))
 
         # out- (bs, protein_len, hidden_size)
         return out
@@ -144,8 +145,8 @@ class SiameseClassifier(nn.Module):
         self.hidden_size = args.hidden_size
         self.ReLU_activation = nn.ReLU()
         self.Sigmoid_activation = torch.sigmoid
-        self.features_linear_layer = nn.Linear(11, 64, bias=True)
-        self.dense_protein = nn.Linear(128, 128, bias=True)
+        self.features_linear_layer = nn.Linear(11, 32, bias=True)
+        self.dense_protein = nn.Linear(64, 32, bias=True)
 
         # protein
         self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim,
@@ -155,7 +156,7 @@ class SiameseClassifier(nn.Module):
         # Initialize constituent network
         self.encoder_protein1 = BiLSTM(args, args.input_size, device)
         # Initialize constituent network
-        self.encoder_dna1 = BiLSTM(args, int(args.input_size / 2), device)
+        self.encoder_dna1 = BiLSTM(args, args.input_size_dna, device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
         self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
 
@@ -165,21 +166,23 @@ class SiameseClassifier(nn.Module):
 
     def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
+        # amino_acids- (bs, l_p, 11 features)   ->   (bs, l_p, 8)
         amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
-        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
-        # concat learnable embeddings to amino-acids features
+        # p- (bs, l_p) -> (bs, l_p, embedding_size)
+        p = self.embedding_amino_acids(p)
+        # concat learnable embeddings to amino-acids features - (bs, l_p, embedding_size + 8)
         p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
-        output_p = self.encoder_protein1(p)
-        p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
-
+        # Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_p, embedding_size + 8)-> (bs, l_p, 20)
+        p = self.encoder_protein1(p)
+        # (bs, l_d)   ->   (bs, l_d, embedding_dim)
         d1 = self.embedding_nucleotides(d1)
+        # (bs, l_d)   ->   (bs, l_d, embedding_dim)
         d2 = self.embedding_nucleotides(d2)
 
-        output_d1 = self.encoder_dna1(d1)
-        output_d2 = self.encoder_dna1(d2)
-
-        d1 = output_d1.contiguous().view(-1, d1.size(1), self.hidden_size)
-        d2 = output_d2.contiguous().view(-1, d1.size(1), self.hidden_size)
+        #  Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_d, embedding_dim) -> (bs, l_d, 128)
+        d1 = self.encoder_dna1(d1)
+        #  Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_d, embedding_dim) -> (bs, l_d, 128)
+        d2 = self.encoder_dna1(d2)
 
         # h1, h2 - (bs * hidden_dim)
         h1 = self.feature_extractor_module(p, d1)
