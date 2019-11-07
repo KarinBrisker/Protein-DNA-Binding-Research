@@ -1,4 +1,5 @@
 import torch.nn.functional as F
+from torch.autograd import Variable
 from torch.nn.init import xavier_normal_
 import torch.nn as nn
 import torch
@@ -89,6 +90,55 @@ class DecomposableAttention(nn.Module):
         return self.ReLU_activation(h)
 
 
+class CNNText(nn.Module):
+
+    def __init__(self, args, embedding_dim, kernel_num, device):
+        super(CNNText, self).__init__()
+        self.args = args
+
+        D = embedding_dim
+        Co = kernel_num
+        Ks = args.kernel_sizes
+
+        self.convs1 = nn.ModuleList([nn.Conv2d(1, Co, (K, D)) for K in Ks])
+        '''
+        self.conv13 = nn.Conv2d(Ci, Co, (2, D))
+        self.conv14 = nn.Conv2d(Ci, Co, (3, D))
+        self.conv15 = nn.Conv2d(Ci, Co, (4, D))
+        '''
+        self.dropout = nn.Dropout(args.dropout)
+        self.fc1 = nn.Linear(len(Ks) * Co, 128)
+
+    def conv_and_pool(self, x, conv):
+        x = F.relu(conv(x)).squeeze(3)  # (BS, Co, W)
+        x = F.max_pool1d(x, x.size(2)).squeeze(2)
+        return x
+
+    def forward(self, x):
+        # x = self.embed(x)  # (BS, W, D)
+
+        # if self.args.static:
+        #     x = Variable(x)
+
+        x = x.unsqueeze(1)  # (BS, 1, W, D)
+
+        x = [F.relu(conv(x)).squeeze(3) for conv in self.convs1]  # [(BS, Co, W), ...]*len(Ks)
+
+        x = [F.max_pool1d(i, i.size(2)).squeeze(2) for i in x]  # [(BS, Co), ...]*len(Ks)
+
+        x = torch.cat(x, 1)  # (BS, kernel_num * 3)
+
+        '''
+        x1 = self.conv_and_pool(x,self.conv13) #(N,Co)
+        x2 = self.conv_and_pool(x,self.conv14) #(N,Co)
+        x3 = self.conv_and_pool(x,self.conv15) #(N,Co)
+        x = torch.cat((x1, x2, x3), 1) # (N,len(Ks)*Co)
+        '''
+        x = self.dropout(x)  # (N, len(Ks)*Co)
+        # x = self.fc1(x)  # (N, C)
+        return x
+
+
 class BiLSTM(nn.Module):
     def __init__(self, args, input_size, device):
         super(BiLSTM, self).__init__()
@@ -128,7 +178,8 @@ class BiLSTM(nn.Module):
                 if '.weight' in key:
                     try:
                         state_dict_p[key] = xavier_normal_(state_dict_p[key])
-                    except: continue
+                    except:
+                        continue
                 if '.bias' in key:
                     bias_length = state_dict_p[key].size()[0]
                     start, end = bias_length // 4, bias_length // 2
@@ -147,18 +198,18 @@ class SiameseClassifier(nn.Module):
         self.Sigmoid_activation = torch.sigmoid
         self.features_linear_layer = nn.Linear(11, 32, bias=True)
         self.dense_protein = nn.Linear(64, 32, bias=True)
-
+        self.args = args
         # protein
         self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim,
                                                   padding_idx=args.num_amino_acids - 1)
         # dna
         self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
         # Initialize constituent network
-        self.encoder_protein1 = BiLSTM(args, args.input_size, device)
+        self.encoder_protein1 = CNNText(args, args.embedding_dim, 100, device)
         # Initialize constituent network
-        self.encoder_dna1 = BiLSTM(args, args.input_size_dna, device)
+        self.encoder_dna1 = CNNText(args, args.embedding_dim, 30, device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
-        self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
+        self.output_fc = nn.Linear(390, 1, bias=True)
 
         # Initialize network parameters
         self.initialize_parameters()
@@ -184,9 +235,11 @@ class SiameseClassifier(nn.Module):
         #  Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_d, embedding_dim) -> (bs, l_d, 128)
         d2 = self.encoder_dna1(d2)
 
+        h1 = torch.cat((p, d1), dim=1)  # bs, 390
+        h2 = torch.cat((p, d2), dim=1)  # bs. 390
         # h1, h2 - (bs * hidden_dim)
-        h1 = self.feature_extractor_module(p, d1)
-        h2 = self.feature_extractor_module(p, d2)
+        # h1 = self.feature_extractor_module(p, d1)
+        # h2 = self.feature_extractor_module(p, d2)
 
         # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the first and the second pair
         y_hat1 = self.output_fc(h1)
@@ -206,7 +259,8 @@ class SiameseClassifier(nn.Module):
                 if '.weight' in key:
                     try:
                         state_dict_p[key] = xavier_normal_(state_dict_p[key])
-                    except: continue
+                    except:
+                        continue
                 if '.bias' in key:
                     bias_length = state_dict_p[key].size()[0]
                     start, end = bias_length // 4, bias_length // 2

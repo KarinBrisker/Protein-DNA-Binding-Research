@@ -23,7 +23,7 @@ from torch.nn import DataParallel
 def parse_args(filename):
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=1e-2, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
     parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
@@ -33,6 +33,12 @@ def parse_args(filename):
     parser.add_argument('--input_size_dna', type=float, default=32, help='input size')
     parser.add_argument('--hidden_size', type=float, default=32, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
+    parser.add_argument('-max-norm', type=float, default=3.0, help='l2 constraint of parameters [default: 3.0]')
+    parser.add_argument('-embed-dim', type=int, default=128, help='number of embedding dimension [default: 128]')
+    parser.add_argument('-kernel-num', type=int, default=100, help='number of each kind of kernel')
+    parser.add_argument('-kernel-sizes', type=list, default=[2, 3, 4],
+                        help='comma-separated kernel size to use for convolution')
+    parser.add_argument('-static', action='store_true', default=False, help='fix the embedding')
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
