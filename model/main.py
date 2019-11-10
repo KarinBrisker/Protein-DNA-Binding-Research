@@ -26,7 +26,7 @@ def parse_args(filename):
     parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--input_size', type=float, default=32, help='input size')
@@ -122,15 +122,15 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-    #                     proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    # logging.info('train proteins:\n')
-    # logging.info(train_proteins)
-    # logging.info('dev proteins:\n')
-    # logging.info(dev_proteins)
-    # logging.info('test proteins:\n')
-    # logging.info(test_proteins)
-    train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
+    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+                        proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    logging.info('train proteins:\n')
+    logging.info(train_proteins)
+    logging.info('dev proteins:\n')
+    logging.info(dev_proteins)
+    logging.info('test proteins:\n')
+    logging.info(test_proteins)
+    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -161,7 +161,7 @@ def train(args, model, train_loader, optimizer, params, criterion):
         # get the inputs - protein, dna, label, amino_acids, dna2
         proteins, dnas1, labels, amino_acids, dnas2 = data
         prediction = model(proteins, dnas1, dnas2, amino_acids)
-        correct += (prediction.round().squeeze() == labels.int()).tolist().count(1)
+        correct += (prediction.round().int().squeeze() == labels.int()).tolist().count(1)
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels)
         optimizer.zero_grad()
