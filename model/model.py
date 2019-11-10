@@ -196,18 +196,19 @@ class SiameseClassifier(nn.Module):
         self.hidden_size = args.hidden_size
         self.ReLU_activation = nn.ReLU()
         self.Sigmoid_activation = torch.sigmoid
-        self.features_linear_layer = nn.Linear(11, 32, bias=True)
-        self.dense_protein = nn.Linear(64, 32, bias=True)
+        # 11 -> 64
+        self.features_linear_layer = nn.Linear(args.num_features, args.num_features_after_linear, bias=True)
+        self.dense_protein = nn.Linear(args.num_features_after_linear + args.embedding_dim, 64, bias=True)
         self.args = args
-        # protein
+        # protein - 128
         self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim,
                                                   padding_idx=args.num_amino_acids - 1)
-        # dna
-        self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
+        # dna - 32
+        self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim_dna)
         # Initialize constituent network
-        self.encoder_protein1 = CNNText(args, args.embedding_dim, 100, device)
+        self.encoder_protein1 = CNNText(args, 64, 100, device)
         # Initialize constituent network
-        self.encoder_dna1 = CNNText(args, args.embedding_dim, 30, device)
+        self.encoder_dna1 = CNNText(args, args.embedding_dim_dna, 30, device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
         self.output_fc = nn.Linear(390, 1, bias=True)
 

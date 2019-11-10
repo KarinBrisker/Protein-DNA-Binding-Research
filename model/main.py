@@ -26,12 +26,12 @@ def parse_args(filename):
     parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=64, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--input_size', type=float, default=32, help='input size')
     parser.add_argument('--input_size_dna', type=float, default=32, help='input size')
-    parser.add_argument('--hidden_size', type=float, default=32, help='hidden size')
+    parser.add_argument('--hidden_size', type=float, default=64, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
     parser.add_argument('-max-norm', type=float, default=3.0, help='l2 constraint of parameters [default: 3.0]')
     parser.add_argument('-embed-dim', type=int, default=128, help='number of embedding dimension [default: 128]')
@@ -40,10 +40,12 @@ def parse_args(filename):
                         help='comma-separated kernel size to use for convolution')
     parser.add_argument('-static', action='store_true', default=False, help='fix the embedding')
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
+    parser.add_argument('--num_features', type=float, default=11, help='num layers bi-lstm')
+    parser.add_argument('--num_features_after_linear', type=float, default=64, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--embedding_dim', type=float, default=32,
-                        help='embedding dim of each nucleotide and amino-acid')
+    parser.add_argument('--embedding_dim', type=float, default=128, help='embedding size amino-acid')
+    parser.add_argument('--embedding_dim_dna', type=float, default=32, help='embedding dim nucleotide')
     parser.add_argument('--dropout', type=float, default=0.4,
                         help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
     logging.basicConfig(filename=filename+'.txt', level=logging.DEBUG, filemode='w')
@@ -120,15 +122,15 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 
 def init_dataset(proteins):
     print('loading train dev and test - split')
-    train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
-                        proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
-    logging.info('train proteins:\n')
-    logging.info(train_proteins)
-    logging.info('dev proteins:\n')
-    logging.info(dev_proteins)
-    logging.info('test proteins:\n')
-    logging.info(test_proteins)
-    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
+    # train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
+    #                     proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
+    # logging.info('train proteins:\n')
+    # logging.info(train_proteins)
+    # logging.info('dev proteins:\n')
+    # logging.info(dev_proteins)
+    # logging.info('test proteins:\n')
+    # logging.info(test_proteins)
+    train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
     return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
 
@@ -159,7 +161,7 @@ def train(args, model, train_loader, optimizer, params, criterion):
         # get the inputs - protein, dna, label, amino_acids, dna2
         proteins, dnas1, labels, amino_acids, dnas2 = data
         prediction = model(proteins, dnas1, dnas2, amino_acids)
-        correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
+        correct += (prediction.round().squeeze() == labels.int()).tolist().count(1)
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels)
         optimizer.zero_grad()
@@ -168,7 +170,7 @@ def train(args, model, train_loader, optimizer, params, criterion):
         torch.nn.utils.clip_grad_norm_(params, args.clip)
         optimizer.step()
         total_loss += loss.item()
-        all_predictions += prediction.squeeze().int().tolist()
+        all_predictions += prediction.round().squeeze().int().tolist()
         all_targets += labels.int().tolist()
     logging.info(confusion_matrix(all_targets, all_predictions))
     logging.info('| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f} | train precision {:5.4f}'
@@ -196,11 +198,11 @@ def test(model, test_loader, criterion):
         for i, data in enumerate(tqdm(test_loader), 0):
             proteins, dnas1, labels, amino_acids, dnas2 = data
             prediction = model(proteins, dnas1, dnas2, amino_acids)
-            correct += (prediction.int().squeeze() == labels.int()).tolist().count(1)
+            correct += (prediction.round().int().squeeze() == labels.int()).tolist().count(1)
             count += len(prediction)
             loss = criterion(prediction.squeeze(), labels)
             total_loss += loss.item()
-            all_predictions += prediction.squeeze().int().tolist()
+            all_predictions += prediction.round().squeeze().int().tolist()
             all_targets += labels.int().tolist()
         logging.info(confusion_matrix(all_targets, all_predictions))
         logging.info('| time: {:5.2f}s | test loss {:5.8f} | test accuracy {:4.6f} | test precision {:5.4f}'
