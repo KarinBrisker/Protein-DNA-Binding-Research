@@ -76,3 +76,34 @@ class ProteinsDataset(Dataset):
         amino_acids = self.amino_acids_[idx].double().to(self.device)
         dna2 = self.dnas2_[idx]
         return protein, dna, label, amino_acids, dna2
+
+
+"""
+this class provides two random samples of: dna, protein, binding score
+output for each sample:
+        # protein - protein seq
+        # dna - dna seq
+        # amino acids - 12 features for each amino acid in the protein
+        # label - binding score
+"""
+
+
+class ProteinsDatasetClassification(Dataset):
+    # "protein", "protein_name", "dna", "score"]
+    def __init__(self, proteins, proteins_names, dna, score, amino_acids, device):
+        self.amino_acids = amino_acids
+        self.device = device
+        self.proteins_ = torch.stack(list(proteins)).to(self.device)
+        self.dnas_ = torch.stack(list(dna)).to(self.device)
+        self.scores_ = torch.tensor(list(score))
+        self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
+
+    def __len__(self):
+        return len(self.labels_)
+
+    def __getitem__(self, idx):
+        protein = self.proteins_[idx]
+        dna = self.dnas_[idx]
+        label = self.scores_[idx]
+        amino_acids = self.amino_acids_[idx].double().to(self.device)
+        return protein, dna, label, amino_acids

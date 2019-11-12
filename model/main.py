@@ -5,7 +5,7 @@ import torch.optim as optim
 import torch.onnx
 import random
 from tqdm import tqdm
-from dictionary import Dictionary, ProteinsDataset
+from dictionary import Dictionary, ProteinsDataset, ProteinsDatasetClassification
 from torch.utils.data import Dataset
 from model import SiameseClassifier
 import numpy as np
@@ -19,7 +19,7 @@ from torch.nn import DataParallel
 
 
 # Hyper-parameters
-def parse_args(filename):
+def parse_args():
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
     parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
@@ -34,12 +34,11 @@ def parse_args(filename):
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
+    parser.add_argument('--train_or_classification', type=int, default=1, help='0 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
                         help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
-    logging.basicConfig(filename=filename+'.txt', level=logging.DEBUG, filemode='w')
-
     args = parser.parse_args()
     return args
 
@@ -79,6 +78,31 @@ output: 3D numpy array of:    protein, dna, binding_score
 """
 
 
+def get_proteins_data_classification(proteins):
+    data = []
+    print('get proteins data')
+    for p in tqdm(proteins):
+        path = '../DNA_data/data/' + p + '.txt'
+        curr_p_df = pd.read_csv(path, sep="\t")
+        curr_p_df.columns = ["d1", "d2", "score"]
+        curr_p_df["dna"] = (curr_p_df["d1"] + curr_p_df["d2"]).apply(lambda x: dna2idx(x))
+        protein = list(dict.amino_acids2idx[c] for c in list(dict.protein2seq[p]) if c in dict.amino_acids)
+        protein += [dict.amino_acids2idx['#']] * (200 - len(protein))
+        curr_p_df["protein"] = [torch.LongTensor(protein)] * curr_p_df.shape[0]
+        curr_p_df["protein_name"] = [p] * curr_p_df.shape[0]
+        curr_p_array = np.array(curr_p_df[["protein", "protein_name", "dna", "score"]].values)
+        data.append(curr_p_array)
+    output = np.concatenate(data, axis=0)
+    random.shuffle(output)
+    return output
+
+
+"""
+input: list of proteins names
+output: 3D numpy array of:    protein, dna, binding_score
+"""
+
+
 def get_proteins_data(proteins):
     data = []
     print('get proteins data')
@@ -110,7 +134,7 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 """
 
 
-def init_dataset(proteins):
+def init_dataset(proteins, get_proteins_data):
     print('loading train dev and test - split')
     train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
                         proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
@@ -172,6 +196,27 @@ def train(args, model, train_loader, optimizer, params, criterion):
 
 
 """
+classification - from couple to score - need to find threshold for classification to binds/not-binds
+input: model and data
+output: all scores per couples of proteins and dna's
+"""
+
+
+def classification(model, data_loader):
+    model.eval()
+    with torch.no_grad():
+        all_predictions = []
+        all_targets = []
+        for i, data in enumerate(tqdm(data_loader), 0):
+            # labels - binding score
+            proteins, dnas, labels, amino_acids = data
+            scores_per_couples = model.score_per_couple(proteins, dnas, amino_acids)
+            all_predictions += scores_per_couples.squeeze().tolist()
+            all_targets += labels.tolist()
+    return all_predictions, all_targets
+
+
+"""
 test function
 """
 
@@ -197,18 +242,32 @@ def test(model, test_loader, criterion):
         logging.info(confusion_matrix(all_targets, all_predictions))
         logging.info('| time: {:5.2f}s | test loss {:5.8f} | test accuracy {:4.6f} | test precision {:5.4f}'
                  '| test recall {:5.4f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count,
-                                                 100.0 * correct /
-                                                 count, precision_score(all_targets, all_predictions) * 100, recall_score(
-            all_targets, all_predictions)*100))
+                                                100.0 * correct /
+                                                count, precision_score(all_targets, all_predictions) * 100,
+                                                recall_score(all_targets, all_predictions)*100))
 
 """
-main function
+create_dataset_loader
 """
 
 
 def create_dataset_loader(data, amino_acids_emb, device, args):
     # "protein", "protein_name", "dna1", "score1", "dna2", "score2"]
-    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], data[:, 4], data[:, 5], amino_acids_emb, device)
+    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], data[:, 4], data[:, 5], amino_acids_emb,
+                              device)
+    loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+    return loader
+
+
+"""
+create_dataset loader classification
+"""
+
+
+def create_dataset_loader_classification(data, amino_acids_emb, device, args):
+    # "protein", "protein_name", "dna", "score"]
+    dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb,
+                              device)
     loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     return loader
 
@@ -219,53 +278,77 @@ main function
 
 
 def main():
-    # file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
-    file_name = 'resssss'
-    args = parse_args(file_name)
-    # args.save_dir = os.path.join('../model', file_name)
-    logging.getLogger().setLevel(logging.INFO)
-
-    logging.info("\nParameters:")
-    for attr, value in sorted(args.__dict__.items()):
-        logging.info("\t{}={}".format(attr.upper(), value))
-
+    args = parse_args()
     # Set the random seed manually for reproducibility.
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     np.random.seed(1234)
     device = torch.device("cuda:2")
     amino_acids_emb = init_amino_acid_data()
-    train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
-    model = SiameseClassifier(args, device).double().to(device)
-    path = '../model/2019_11_06_10:47:31/epoch_' + str(469) + '.pt'
-    model.load_state_dict(torch.load(path))
-    model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
-    print('create data loaders')
 
-    train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
-    dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
-    test_loader = create_dataset_loader(test_data, amino_acids_emb, device, args)
-    logging.info(f'The model has {count_parameters(model):,} trainable parameters')
-    criterion = nn.BCELoss().to(device)
-    params_model = filter(lambda p: p.requires_grad, model.parameters())
-    params = list(params_model) + list(criterion.parameters())
-    optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
+    # 0 - train ranking
+    if args.train_or_classification == 0:
+        file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
+        logging.basicConfig(filename=file_name + '.txt', level=logging.DEBUG, filemode='w')
+        args.save_dir = os.path.join('../model', file_name)
+        logging.getLogger().setLevel(logging.INFO)
+        logging.info("\nParameters:")
+        for attr, value in sorted(args.__dict__.items()):
+            logging.info("\t{}={}".format(attr.upper(), value))
+        train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)),
+                                                       get_proteins_data)
+        model = SiameseClassifier(args, device).double().to(device)
+        model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
+        print('create data loaders')
+        train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
+        dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
+        test_loader = create_dataset_loader(test_data, amino_acids_emb, device, args)
+        logging.info(f'The model has {count_parameters(model):,} trainable parameters')
+        criterion = nn.BCELoss().to(device)
+        params_model = filter(lambda p: p.requires_grad, model.parameters())
+        params = list(params_model) + list(criterion.parameters())
+        optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
 
-    test(model, train_loader, criterion)
-    test(model, dev_loader, criterion)
-    test(model, test_loader, criterion)
+        if not os.path.isdir(args.save_dir):
+            os.makedirs(args.save_dir)
 
-    # if not os.path.isdir(args.save_dir):
-    #     os.makedirs(args.save_dir)
+        print('\n --------- training --------\n')
+        for epoch in range(1, args.epochs):
+            logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
+            train(args, model, train_loader, optimizer, params, criterion)
+            test(model, dev_loader, criterion)
+            logging.info('-' * 89)
+            with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
+                torch.save(model.module.state_dict(), f)
+        test(model, test_loader, criterion)
 
-    # print('\n --------- training --------\n')
-    # for epoch in range(1, args.epochs):
-    #     logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
-        # train(args, model, train_loader, optimizer, params, criterion)
-        # test(model, dev_loader, criterion)
-        # logging.info('-' * 89)
-        # with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
-        #     torch.save(model.module.state_dict(), f)
+    # 1 - classification - inference time
+    else:
+        file_name = 'from_ranking_to_classification'
+        logging.basicConfig(filename=file_name + '.txt', level=logging.DEBUG, filemode='w')
+        logging.getLogger().setLevel(logging.INFO)
+        args.save_dir = os.path.join('../model', file_name)
+        logging.getLogger().setLevel(logging.INFO)
+
+        # TODO: create data set with just one couple per epoch !!!!
+
+        train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)),
+                                                       get_proteins_data_classification)
+        model = SiameseClassifier(args, device).double().to(device)
+        path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
+        model.load_state_dict(torch.load(path))
+        model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
+        print('create data loaders')
+
+        train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
+        dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+
+        all_predictions_train, all_targets_train = classification(model, train_loader)
+        all_predictions_dev, all_targets_dev = classification(model, dev_loader)
+        all_predictions_test, all_targets_test = classification(model, test_loader)
+
+        print('what')
 
 
 if __name__ == '__main__':
