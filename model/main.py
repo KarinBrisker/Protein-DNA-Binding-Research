@@ -1,4 +1,3 @@
-# coding: utf-8
 import argparse
 import datetime
 import os
@@ -23,29 +22,20 @@ from torch.nn import DataParallel
 def parse_args(filename):
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
     parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
-    parser.add_argument('--input_size', type=float, default=32, help='input size')
-    parser.add_argument('--input_size_dna', type=float, default=32, help='input size')
-    parser.add_argument('--hidden_size', type=float, default=64, help='hidden size')
+    parser.add_argument('--input_size', type=float, default=128, help='input size')
+    parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
-    parser.add_argument('-max-norm', type=float, default=3.0, help='l2 constraint of parameters [default: 3.0]')
-    parser.add_argument('-embed-dim', type=int, default=128, help='number of embedding dimension [default: 128]')
-    parser.add_argument('-kernel-num', type=int, default=100, help='number of each kind of kernel')
-    parser.add_argument('-kernel-sizes', type=list, default=[2, 3, 4],
-                        help='comma-separated kernel size to use for convolution')
-    parser.add_argument('-static', action='store_true', default=False, help='fix the embedding')
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
-    parser.add_argument('--num_features', type=float, default=11, help='num layers bi-lstm')
-    parser.add_argument('--num_features_after_linear', type=float, default=64, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--embedding_dim', type=float, default=128, help='embedding size amino-acid')
-    parser.add_argument('--embedding_dim_dna', type=float, default=32, help='embedding dim nucleotide')
+    parser.add_argument('--embedding_dim', type=float, default=64,
+                        help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
                         help='introduces a Dropout layer on the outputs of each LSTM layer except the last layer')
     logging.basicConfig(filename=filename+'.txt', level=logging.DEBUG, filemode='w')
@@ -229,10 +219,10 @@ main function
 
 
 def main():
-    file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
-    # file_name = 'del'
+    # file_name = datetime.datetime.now().strftime('%Y_%m_%d_%H:%M:%S')
+    file_name = 'resssss'
     args = parse_args(file_name)
-    args.save_dir = os.path.join('../model', file_name)
+    # args.save_dir = os.path.join('../model', file_name)
     logging.getLogger().setLevel(logging.INFO)
 
     logging.info("\nParameters:")
@@ -247,8 +237,11 @@ def main():
     amino_acids_emb = init_amino_acid_data()
     train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
     model = SiameseClassifier(args, device).double().to(device)
+    path = '../model/2019_11_06_10:47:31/epoch_' + str(469) + '.pt'
+    model.load_state_dict(torch.load(path))
     model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
     print('create data loaders')
+
     train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
     dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
     test_loader = create_dataset_loader(test_data, amino_acids_emb, device, args)
@@ -258,18 +251,21 @@ def main():
     params = list(params_model) + list(criterion.parameters())
     optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
 
-    if not os.path.isdir(args.save_dir):
-        os.makedirs(args.save_dir)
-
-    print('\n --------- training --------\n')
-    for epoch in range(1, args.epochs):
-        logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
-        train(args, model, train_loader, optimizer, params, criterion)
-        test(model, dev_loader, criterion)
-        logging.info('-' * 89)
-        with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
-            torch.save(model.module.state_dict(), f)
+    test(model, train_loader, criterion)
+    test(model, dev_loader, criterion)
     test(model, test_loader, criterion)
+
+    # if not os.path.isdir(args.save_dir):
+    #     os.makedirs(args.save_dir)
+
+    # print('\n --------- training --------\n')
+    # for epoch in range(1, args.epochs):
+    #     logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
+        # train(args, model, train_loader, optimizer, params, criterion)
+        # test(model, dev_loader, criterion)
+        # logging.info('-' * 89)
+        # with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
+        #     torch.save(model.module.state_dict(), f)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 import torch.nn.functional as F
-from torch.autograd import Variable
 from torch.nn.init import xavier_normal_
 import torch.nn as nn
 import torch
@@ -8,20 +7,18 @@ torch.backends.cudnn.enabled = False
 
 """
 # resources:
-
 1) https://github.com/nvnhat95/Natural-Language-Inference  
     Decomposable-attention implementation for Natural language inference (NLI) - determining entailment and 
     contradiction relationships between a premise and a hypothesis
-    
+
 2) https://github.com/fionn-mac/Manhattan-LSTM/blob/master/PyTorch/manhattan_lstm.py
 3) https://github.com/demelin/Sentence-similarity-classifier-for-pyTorch/blob/master/similarity_estimator/networks.py
     MaLSTM model for computing Semantic Similarity - Siamese Manhattan LSTM
     If 2 questions ave the same semantic meaning
-
 4) https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/02-intermediate/bidirectional_recurrent_neural_
 network/main.py
     bi-LSTM
-    
+
 5) https://www.eggie5.com/130-learning-to-rank-siamese-network-pairwise-data
     learning to rank using siamese networks
 """
@@ -90,62 +87,12 @@ class DecomposableAttention(nn.Module):
         return self.ReLU_activation(h)
 
 
-class CNNText(nn.Module):
-
-    def __init__(self, args, embedding_dim, kernel_num, device):
-        super(CNNText, self).__init__()
-        self.args = args
-
-        D = embedding_dim
-        Co = kernel_num
-        Ks = args.kernel_sizes
-
-        self.convs1 = nn.ModuleList([nn.Conv2d(1, Co, (K, D)) for K in Ks])
-        '''
-        self.conv13 = nn.Conv2d(Ci, Co, (2, D))
-        self.conv14 = nn.Conv2d(Ci, Co, (3, D))
-        self.conv15 = nn.Conv2d(Ci, Co, (4, D))
-        '''
-        self.dropout = nn.Dropout(args.dropout)
-        self.fc1 = nn.Linear(len(Ks) * Co, 128)
-
-    def conv_and_pool(self, x, conv):
-        x = F.relu(conv(x)).squeeze(3)  # (BS, Co, W)
-        x = F.max_pool1d(x, x.size(2)).squeeze(2)
-        return x
-
-    def forward(self, x):
-        # x = self.embed(x)  # (BS, W, D)
-
-        # if self.args.static:
-        #     x = Variable(x)
-
-        x = x.unsqueeze(1)  # (BS, 1, W, D)
-
-        x = [F.relu(conv(x)).squeeze(3) for conv in self.convs1]  # [(BS, Co, W), ...]*len(Ks)
-
-        x = [F.max_pool1d(i, i.size(2)).squeeze(2) for i in x]  # [(BS, Co), ...]*len(Ks)
-
-        x = torch.cat(x, 1)  # (BS, kernel_num * 3)
-
-        '''
-        x1 = self.conv_and_pool(x,self.conv13) #(N,Co)
-        x2 = self.conv_and_pool(x,self.conv14) #(N,Co)
-        x3 = self.conv_and_pool(x,self.conv15) #(N,Co)
-        x = torch.cat((x1, x2, x3), 1) # (N,len(Ks)*Co)
-        '''
-        x = self.dropout(x)  # (N, len(Ks)*Co)
-        # x = self.fc1(x)  # (N, C)
-        return x
-
-
 class BiLSTM(nn.Module):
     def __init__(self, args, input_size, device):
         super(BiLSTM, self).__init__()
         self.device = device
         self.hidden_size = args.hidden_size
         self.num_layers = args.num_layers
-        self.ReLU_activation = nn.ReLU()
         # batch_first – If True, then the input and output tensors are provided as (batch, seq, feature). Default: False
         # num_layers – Number of recurrent layers. E.g., setting num_layers=2 would mean stacking two LSTMs together to
         # form a stacked LSTM, with the second LSTM taking in outputs of the first LSTM and computing the final results.
@@ -164,7 +111,7 @@ class BiLSTM(nn.Module):
 
         # Forward propagate LSTM. out: tensor of shape (batch_size, seq_length, hidden_size * num directions)
         out, _ = self.lstm(x, (h0, c0))
-        out = self.ReLU_activation(self.fc(out))
+        out = self.fc(out)
 
         # out- (bs, protein_len, hidden_size)
         return out
@@ -196,21 +143,20 @@ class SiameseClassifier(nn.Module):
         self.hidden_size = args.hidden_size
         self.ReLU_activation = nn.ReLU()
         self.Sigmoid_activation = torch.sigmoid
-        # 11 -> 64
-        self.features_linear_layer = nn.Linear(args.num_features, args.num_features_after_linear, bias=True)
-        self.dense_protein = nn.Linear(args.num_features_after_linear + args.embedding_dim, 64, bias=True)
-        self.args = args
-        # protein - 128
+        self.features_linear_layer = nn.Linear(11, 64, bias=True)
+        self.dense_protein = nn.Linear(128, 128, bias=True)
+
+        # protein
         self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim,
                                                   padding_idx=args.num_amino_acids - 1)
-        # dna - 32
-        self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim_dna)
+        # dna
+        self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
         # Initialize constituent network
-        self.encoder_protein1 = CNNText(args, 64, 100, device)
+        self.encoder_protein1 = BiLSTM(args, args.input_size, device)
         # Initialize constituent network
-        self.encoder_dna1 = CNNText(args, args.embedding_dim_dna, 30, device)
+        self.encoder_dna1 = BiLSTM(args, int(args.input_size / 2), device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
-        self.output_fc = nn.Linear(390, 1, bias=True)
+        self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
 
         # Initialize network parameters
         self.initialize_parameters()
@@ -218,29 +164,25 @@ class SiameseClassifier(nn.Module):
 
     def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
-        # amino_acids- (bs, l_p, 11 features)   ->   (bs, l_p, 8)
         amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
-        # p- (bs, l_p) -> (bs, l_p, embedding_size)
-        p = self.embedding_amino_acids(p)
-        # concat learnable embeddings to amino-acids features - (bs, l_p, embedding_size + 8)
+        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        # concat learnable embeddings to amino-acids features
         p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
-        # Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_p, embedding_size + 8)-> (bs, l_p, 20)
-        p = self.encoder_protein1(p)
-        # (bs, l_d)   ->   (bs, l_d, embedding_dim)
+        output_p = self.encoder_protein1(p)
+        p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
+
         d1 = self.embedding_nucleotides(d1)
-        # (bs, l_d)   ->   (bs, l_d, embedding_dim)
         d2 = self.embedding_nucleotides(d2)
 
-        #  Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_d, embedding_dim) -> (bs, l_d, 128)
-        d1 = self.encoder_dna1(d1)
-        #  Bi-LSTM. output for each amino-acid and than MLP+ReLU- (bs, l_d, embedding_dim) -> (bs, l_d, 128)
-        d2 = self.encoder_dna1(d2)
+        output_d1 = self.encoder_dna1(d1)
+        output_d2 = self.encoder_dna1(d2)
 
-        h1 = torch.cat((p, d1), dim=1)  # bs, 390
-        h2 = torch.cat((p, d2), dim=1)  # bs. 390
+        d1 = output_d1.contiguous().view(-1, d1.size(1), self.hidden_size)
+        d2 = output_d2.contiguous().view(-1, d1.size(1), self.hidden_size)
+
         # h1, h2 - (bs * hidden_dim)
-        # h1 = self.feature_extractor_module(p, d1)
-        # h2 = self.feature_extractor_module(p, d2)
+        h1 = self.feature_extractor_module(p, d1)
+        h2 = self.feature_extractor_module(p, d2)
 
         # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the first and the second pair
         y_hat1 = self.output_fc(h1)
@@ -250,6 +192,26 @@ class SiameseClassifier(nn.Module):
         rank = self.Sigmoid_activation(y_hat1 - y_hat2)
         # print(rank)
         return rank
+
+    def score_per_couple(self, p, d, amino_acids):
+        """ Score per DNA and Protein at inference time. """
+        amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
+        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        # concat learnable embeddings to amino-acids features
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
+        output_p = self.encoder_protein1(p)
+        p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
+
+        d = self.embedding_nucleotides(d)
+        d = self.encoder_dna1(d).contiguous().view(-1, d.size(1), self.hidden_size)
+
+        # h - (bs * hidden_dim)
+        h = self.feature_extractor_module(p, d)
+
+        # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the pair
+        y_hat = self.output_fc(h)
+
+        return y_hat
 
     def initialize_parameters(self):
         """ Initializes network parameters. """

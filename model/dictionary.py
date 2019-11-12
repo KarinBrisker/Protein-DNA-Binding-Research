@@ -62,7 +62,9 @@ class ProteinsDataset(Dataset):
 
         self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
 
-        self.labels_ = torch.tensor([1 if (score1[i] - score2[i]) > 0 else 0 for i in range(len(score1))]).to(self.device).double()
+        self.labels_ = torch.tensor([1 if (score1[i] - score2[i]) > 0 else 0 for i in range(len(score1))]).to(self.
+                                                                                                              device).\
+            double()
 
     def __len__(self):
         return len(self.labels_)
