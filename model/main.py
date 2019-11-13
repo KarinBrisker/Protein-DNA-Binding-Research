@@ -133,7 +133,7 @@ output: 3 - 3D numpy array of: protein, dna, binding_score for train, dev and te
 """
 
 
-def init_dataset(proteins, get_proteins_data):
+def init_dataset(proteins):
     print('loading train dev and test - split')
     train_proteins, dev_proteins, test_proteins = proteins[:int(len(proteins) * .8)], \
                         proteins[int(len(proteins) * .8):int(len(proteins) * .85)], proteins[int(len(proteins) * .85):]
@@ -143,8 +143,7 @@ def init_dataset(proteins, get_proteins_data):
     logging.info(dev_proteins)
     logging.info('test proteins:\n')
     logging.info(test_proteins)
-    # train_proteins, dev_proteins, test_proteins = proteins[:5], proteins[1:2], proteins[2:3]
-    return get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
+    return train_proteins, dev_proteins, test_proteins
 
 
 """
@@ -298,8 +297,10 @@ def main():
         logging.info("\nParameters:")
         for attr, value in sorted(args.__dict__.items()):
             logging.info("\t{}={}".format(attr.upper(), value))
-        train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)),
-                                                       get_proteins_data)
+        train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
+
+        train_data, dev_data, test_data = get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
+
         model = SiameseClassifier(args, device).double().to(device)
         path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
         model.load_state_dict(torch.load(path))
@@ -315,12 +316,16 @@ def main():
         params = list(params_model) + list(criterion.parameters())
         optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
 
-        # if not os.path.isdir(args.save_dir):
-        #     os.makedirs(args.save_dir)
+        if not os.path.isdir(args.save_dir):
+            os.makedirs(args.save_dir)
 
         print('\n --------- training --------\n')
         for epoch in range(1, args.epochs):
             logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
+            if epoch % 4 == 0:
+                train_data = get_proteins_data(train_proteins)
+                train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
+
             train(args, model, train_loader, optimizer, params, criterion)
             test(model, dev_loader, criterion)
             logging.info('-' * 89)
