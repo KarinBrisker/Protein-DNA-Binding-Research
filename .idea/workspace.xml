@@ -19,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="363" column="56" selection-start-line="363" selection-start-column="56" selection-end-line="363" selection-end-column="56" />
+            <state relative-caret-position="4650">
+              <caret line="310" column="74" selection-start-line="310" selection-start-column="74" selection-end-line="310" selection-end-column="74" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-263">
-              <caret line="1762" column="27" lean-forward="true" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
+            <state relative-caret-position="26400">
+              <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -40,7 +40,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1454">
+            <state relative-caret-position="3405">
               <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
@@ -70,7 +70,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/dictionary.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
+            <state relative-caret-position="975">
               <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
@@ -83,8 +83,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>first</find>
-      <find>fi</find>
       <find>tqdm</find>
       <find>train_</find>
       <find>logging_info</find>
@@ -113,6 +111,8 @@
       <find>[13, 16, 9, 12,</find>
       <find>random.shuffle</find>
       <find>random</find>
+      <find>1234</find>
+      <find>random.</find>
     </findStrings>
     <replaceStrings>
       <replace>state_dict</replace>
@@ -173,6 +173,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -189,7 +190,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -302,40 +302,42 @@
       <workItem from="1573410313096" duration="5155000" />
       <workItem from="1573473303415" duration="8805000" />
       <workItem from="1573507543766" duration="4687000" />
-      <workItem from="1573548237750" duration="30255000" />
+      <workItem from="1573548237750" duration="32524000" />
+      <workItem from="1573656050452" duration="2552000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="223152000" />
+    <option name="totallyTimeSpent" value="227973000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15283123" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15448049" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5442765" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.5442765" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.49568033" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
-      <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
+      <window_info anchor="bottom" id="File Transfer" order="9" visible="true" weight="0.17926566" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.12095033" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.2650862" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.18466523" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.48104265" visible="true" weight="0.29191864" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.48157895" visible="true" weight="0.29191864" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5189573" side_tool="true" visible="true" weight="0.29191864" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.51842105" side_tool="true" visible="true" weight="0.29191864" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -570,6 +572,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4650">
+          <caret line="310" column="74" selection-start-line="310" selection-start-column="74" selection-end-line="310" selection-end-column="74" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26400">
+          <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3405">
+          <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -584,39 +613,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-263">
-          <caret line="1762" column="27" lean-forward="true" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/dictionary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
+        <state relative-caret-position="975">
           <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1454">
-          <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="363" column="56" selection-start-line="363" selection-start-column="56" selection-end-line="363" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
