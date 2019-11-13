@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/model/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,15 +12,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1573590225095" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1573644284870" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="359" column="51" lean-forward="true" selection-start-line="359" selection-start-column="51" selection-end-line="359" selection-end-column="51" />
+            <state relative-caret-position="281">
+              <caret line="363" column="56" selection-start-line="363" selection-start-column="56" selection-end-line="363" selection-end-column="56" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -40,7 +40,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="464">
+            <state relative-caret-position="1454">
               <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
@@ -70,7 +70,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/dictionary.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-196">
+            <state relative-caret-position="765">
               <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
@@ -83,10 +83,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>model =</find>
-      <find>CNNText</find>
-      <find>load_s</find>
-      <find>prediction.</find>
       <find>first</find>
       <find>fi</find>
       <find>tqdm</find>
@@ -96,7 +92,6 @@
       <find>init_amino_acid_data</find>
       <find>roun</find>
       <find>embedding_amino_acids</find>
-      <find>p</find>
       <find>DecomposableAttention</find>
       <find>0, 2</find>
       <find>BiLSTM</find>
@@ -112,10 +107,14 @@
       <find>DataFr</find>
       <find>concat</find>
       <find>4</find>
+      <find>p</find>
       <find>label</find>
+      <find>get_proteins_data_classification</find>
+      <find>[13, 16, 9, 12,</find>
+      <find>random.shuffle</find>
+      <find>random</find>
     </findStrings>
     <replaceStrings>
-      <replace>encoder_protein2</replace>
       <replace>state_dict</replace>
       <replace>double()</replace>
       <replace>args.input_size</replace>
@@ -145,6 +144,7 @@
       <replace>6</replace>
       <replace>7</replace>
       <replace>8</replace>
+      <replace>np.random.shuffle</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -302,24 +302,23 @@
       <workItem from="1573410313096" duration="5155000" />
       <workItem from="1573473303415" duration="8805000" />
       <workItem from="1573507543766" duration="4687000" />
-      <workItem from="1573548237750" duration="25307000" />
+      <workItem from="1573548237750" duration="30255000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="218204000" />
+    <option name="totallyTimeSpent" value="223152000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15283123" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.25161988" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.4384449" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5442765" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.49568033" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -334,9 +333,9 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.4846154" visible="true" weight="0.33095106" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.48104265" visible="true" weight="0.29191864" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5153846" side_tool="true" visible="true" weight="0.33095106" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5189573" side_tool="true" visible="true" weight="0.29191864" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -418,13 +417,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>388</line>
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>341</line>
-          <option name="timeStamp" value="74" />
+          <line>95</line>
+          <option name="timeStamp" value="80" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -439,77 +433,72 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>pd.DataFrame(list(zip(all_proteins, all_dnas, all_targets, all_predictions)), columns=['protein', 'dna',
-                                                                                                       'y_true',
-                                                                                                       'y_pred'])</expression-string>
+        <expression-string>random.shuffle(output3)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>torch.cat([diff.view(-1,1).double(), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
-                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <expression-string>output3 = output1[1:4, :]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>torch.cat([diff.view(-1,1).double(), all_proteins, all_proteins2.double(), all_dnas.double(),
-                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <expression-string>output2 = output1[1:4, :]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>torch.cat([diff.view(-1,1), all_proteins.double(), all_proteins2.double(), all_dnas.double(),
-                          all_dnas2.double(), label.view(-1,1).double()], dim=1)</expression-string>
+        <expression-string>output2 = output1[:, 1:4]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>logging.info('-' * 89)
-logging.info('\n')
-logging.info(confusion_matrix(all_targets, all_predictions))
-logging.info(
-    f'train precision: {precision_score(all_targets, all_predictions)}, train recall: {recall_score(all_targets,
-                                                                                                    all_predictions)}')
-logging.info(
-    '| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} | lr {:2.5f}'.format(
-        (time.time() - epoch_start_time), total_loss * 1.0 / count, 100.0 * correct / count,
-        optimizer.param_groups[0]['lr']))</expression-string>
+        <expression-string>output1</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>logging.info(f'-' * 89 + '\n' + confusion_matrix(all_targets, all_predictions) + '\n' )</expression-string>
+        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x: str(x))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>logging.info(f'-' * 89 + '\n' )</expression-string>
+        <expression-string>print(pd.DataFrame(output[:,0]).apply(lambda x: str(x)).value_counts())</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>logging.info(f'-' * 89 + '\n' + confusion_matrix(all_targets, all_predictions) + '\n' + 'train precision:' + {precision_score(all_targets, all_predictions)} + 'train recall:' +
-             {recall_score(all_targets,
-                           all_predictions)} + '| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} '
-                                               '| lr {:2.5f}'.format((time.time() - epoch_start_time),
-                                                                     total_loss * 1.0 / count, 100.0 * correct / count,
-                                                                     optimizer.param_groups[0]['lr']))</expression-string>
+        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x:str(x)).value_counts()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>logging.info('-' * 89 + '\n' + confusion_matrix(all_targets, all_predictions) + '\n' + 'train precision:' +
-             {precision_score(all_targets, all_predictions)} + 'train recall:' +
-             {recall_score(all_targets,
-                           all_predictions)} + '| time: {:5.2f}s | train loss {:5.8f} | train accuracy {:4.6f} '
-                                               '| lr {:2.5f}'.format((time.time() - epoch_start_time),
-                                                                     total_loss * 1.0 / count, 100.0 * correct / count,
-                                                                     optimizer.param_groups[0]['lr']))</expression-string>
+        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x:str(x))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>output[0:723690] [115][0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>output[0:723690] [115]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>dict.protein2seq</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>dict.protein2seq[</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>scores_per_couples.squeeze().tolist()</expression-string>
         <language-id>Python</language-id>
@@ -537,21 +526,6 @@ logging.info(
       </expression>
       <expression>
         <expression-string>prediction.int().squeeze()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>list(labels).count(0)</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>[F.relu(conv(x)).squeeze(3) for conv in self.convs1]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.convs1</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -617,19 +591,9 @@ logging.info(
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/dictionary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-196">
+        <state relative-caret-position="765">
           <caret line="66" column="12" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
@@ -637,10 +601,20 @@ logging.info(
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1454">
+          <caret line="230" column="12" selection-start-line="230" selection-start-column="12" selection-end-line="230" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="359" column="51" lean-forward="true" selection-start-line="359" selection-start-column="51" selection-end-line="359" selection-end-column="51" />
+        <state relative-caret-position="281">
+          <caret line="363" column="56" selection-start-line="363" selection-start-column="56" selection-end-line="363" selection-end-column="56" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

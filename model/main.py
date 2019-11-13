@@ -93,7 +93,7 @@ def get_proteins_data_classification(proteins):
         curr_p_array = np.array(curr_p_df[["protein", "protein_name", "dna", "score"]].values)
         data.append(curr_p_array)
     output = np.concatenate(data, axis=0)
-    random.shuffle(output)
+    np.random.shuffle(output)
     return output
 
 
@@ -116,7 +116,7 @@ def get_proteins_data(proteins):
         curr_p_df["protein"] = [torch.LongTensor(protein)] * curr_p_df.shape[0]
         curr_p_df["protein_name"] = [p] * curr_p_df.shape[0]
         second_dna = np.array(curr_p_df[["dna1", "score1"]].values)
-        random.shuffle(second_dna)
+        np.random.shuffle(second_dna)
         curr_p_df = pd.concat([curr_p_df, pd.DataFrame(second_dna, columns=['dna2', 'score2'])], axis=1)
         curr_p_df["diff"] = abs(curr_p_df["score1"] - curr_p_df["score2"]) > 0.2
         # remove rows if 2 dna's are close, and if it's the same dna(the first condition captures both)
@@ -124,7 +124,6 @@ def get_proteins_data(proteins):
         curr_p_array = np.array(df[["protein", "protein_name", "dna1", "score1", "dna2", "score2"]].values)
         data.append(curr_p_array)
     output = np.concatenate(data, axis=0)
-    random.shuffle(output)
     return output
 
 
@@ -351,18 +350,18 @@ def main():
             result.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___train4___.pkl'))
         '''
 
-        print('train')
-        train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
-        df_train = classification(model, train_loader)
-        # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
+        # print('train')
+        # train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
+        # df_train = classification(model, train_loader)
+        # # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
         print('dev')
         dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
         df_dev = classification(model, dev_loader)
-        # df_dev.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___dev___.pkl'))
+        df_dev.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___dev___.pkl'))
         print('test')
         test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
         df_test = classification(model, test_loader)
-        # df_test.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
+        df_test.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___test___.pkl'))
         logging.info('finished')
 
 
