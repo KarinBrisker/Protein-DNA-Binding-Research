@@ -99,7 +99,7 @@ class ProteinsDatasetClassification(Dataset):
         self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
 
     def __len__(self):
-        return len(self.labels_)
+        return len(self.scores_)
 
     def __getitem__(self, idx):
         protein = self.proteins_[idx]

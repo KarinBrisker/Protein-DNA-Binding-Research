@@ -205,15 +205,19 @@ output: all scores per couples of proteins and dna's
 def classification(model, data_loader):
     model.eval()
     with torch.no_grad():
-        all_predictions = []
-        all_targets = []
+        all_predictions, all_targets, all_proteins, all_dnas = [], [], [], []
         for i, data in enumerate(tqdm(data_loader), 0):
             # labels - binding score
             proteins, dnas, labels, amino_acids = data
-            scores_per_couples = model.score_per_couple(proteins, dnas, amino_acids)
+            all_proteins += proteins.tolist()
+            all_dnas += dnas.tolist()
+            scores_per_couples = model.module.score_per_couple(proteins, dnas, amino_acids)
             all_predictions += scores_per_couples.squeeze().tolist()
             all_targets += labels.tolist()
-    return all_predictions, all_targets
+    scores_df = pd.DataFrame(list(zip(all_proteins, all_dnas, all_targets, all_predictions)), columns=['protein', 'dna',
+                                                                                                       'y_true',
+                                                                                                       'y_pred'])
+    return scores_df
 
 
 """
@@ -246,6 +250,7 @@ def test(model, test_loader, criterion):
                                                 count, precision_score(all_targets, all_predictions) * 100,
                                                 recall_score(all_targets, all_predictions)*100))
 
+
 """
 create_dataset_loader
 """
@@ -266,8 +271,7 @@ create_dataset loader classification
 
 def create_dataset_loader_classification(data, amino_acids_emb, device, args):
     # "protein", "protein_name", "dna", "score"]
-    dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb,
-                              device)
+    dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb, device)
     loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     return loader
 
@@ -329,9 +333,6 @@ def main():
         logging.getLogger().setLevel(logging.INFO)
         args.save_dir = os.path.join('../model', file_name)
         logging.getLogger().setLevel(logging.INFO)
-
-        # TODO: create data set with just one couple per epoch !!!!
-
         train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)),
                                                        get_proteins_data_classification)
         model = SiameseClassifier(args, device).double().to(device)
@@ -339,16 +340,30 @@ def main():
         model.load_state_dict(torch.load(path))
         model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
         print('create data loaders')
+        '''
+        if i need to save results:
+            train_loader1 = create_dataset_loader_classification(train_data[3000000:3100000], amino_acids_emb, device, args)
+            train_loader2 = create_dataset_loader_classification(train_data[3100000:3200000], amino_acids_emb, device, args)       
+            df_1 = classification(model, train_loader1)
+            df_2 = classification(model, train_loader2)
+            frames = [df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8]
+            result = pd.concat(frames)
+            result.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___train4___.pkl'))
+        '''
 
+        print('train')
         train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
+        df_train = classification(model, train_loader)
+        # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
+        print('dev')
         dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        df_dev = classification(model, dev_loader)
+        # df_dev.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___dev___.pkl'))
+        print('test')
         test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
-
-        all_predictions_train, all_targets_train = classification(model, train_loader)
-        all_predictions_dev, all_targets_dev = classification(model, dev_loader)
-        all_predictions_test, all_targets_test = classification(model, test_loader)
-
-        print('what')
+        df_test = classification(model, test_loader)
+        # df_test.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
+        logging.info('finished')
 
 
 if __name__ == '__main__':
