@@ -20,7 +20,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
+            <state relative-caret-position="169">
               <caret line="385" column="65" selection-start-line="385" selection-start-column="65" selection-end-line="385" selection-end-column="65" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -83,8 +83,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="209" column="32" selection-start-line="209" selection-start-column="32" selection-end-line="209" selection-end-column="32" />
+            <state relative-caret-position="288">
+              <caret line="197" column="49" selection-end-line="236" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -124,8 +124,8 @@
       <find>SELU</find>
       <find>logging</find>
       <find>probas_</find>
-      <find>rep_of_couples__2019_11_13_21:29:36_epoch_31.</find>
       <find>SELU_activation</find>
+      <find>rep_of_couples__2019_11_13_21:29:36_epoch_31.</find>
     </findStrings>
     <replaceStrings>
       <replace>8</replace>
@@ -156,8 +156,8 @@
       <replace>SELU</replace>
       <replace>2019_11_13_21:29:36_epoch_31.</replace>
       <replace>2019_11_14_09:05:35_epoch_42.</replace>
-      <replace>rep_of_couples__2019_11_19_10:37:16_epoch_5.</replace>
       <replace>Tanh_activation</replace>
+      <replace>rep_of_couples__2019_11_19_10:37:16_epoch_5.</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -343,24 +343,23 @@
       <workItem from="1573714602055" duration="1531000" />
       <workItem from="1573729272780" duration="13612000" />
       <workItem from="1573800911010" duration="2902000" />
-      <workItem from="1573974674006" duration="17886000" />
+      <workItem from="1573974674006" duration="18530000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="267847000" />
+    <option name="totallyTimeSpent" value="268491000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.097306214" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.097306214" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.1673866" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.35961124" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.35961124" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -368,16 +367,16 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
       <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.26293105" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.26241902" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.14902808" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.47554806" visible="true" weight="0.04013194" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.47584188" visible="true" weight="0.04013194" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5244519" side_tool="true" visible="true" weight="0.04013194" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5241581" side_tool="true" visible="true" weight="0.04013194" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -636,16 +635,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="385" column="65" selection-start-line="385" selection-start-column="65" selection-end-line="385" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="511">
@@ -653,10 +642,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="385" column="65" selection-start-line="385" selection-start-column="65" selection-end-line="385" selection-end-column="65" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="209" column="32" selection-start-line="209" selection-start-column="32" selection-end-line="209" selection-end-column="32" />
+        <state relative-caret-position="288">
+          <caret line="197" column="49" selection-end-line="236" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>

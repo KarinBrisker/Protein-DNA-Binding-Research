@@ -36,11 +36,11 @@ class DecomposableAttention(nn.Module):
             layers = [nn.Linear(input_dim, output_dim)]
             if use_BN:
                 layers.append(nn.BatchNorm1d(output_dim, affine=True))
-            layers.append(nn.SELU())
+            layers.append(nn.ReLU())
             layers.append(nn.Dropout(p=dropout_rate))
 
             layers.append(nn.Linear(output_dim, output_dim))
-            layers.append(nn.SELU())
+            layers.append(nn.ReLU())
 
             mlp = nn.Sequential(*layers)
 
@@ -48,8 +48,8 @@ class DecomposableAttention(nn.Module):
 
         self.hidden_dim = hidden_dim
         self.G = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
-        self.H = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
-        self.SELU_activation = nn.SELU()
+        self.H = MLP(hidden_dim * 2, hidden_dim, False, dropout_rate)
+        self.ReLU_activation = nn.ReLU()
 
     # CHECKED #
     # p - bs, p_len, embedding_size
@@ -84,7 +84,7 @@ class DecomposableAttention(nn.Module):
         h = self.H(v1_cat_v2)
 
         # h - (bs, hidden_dim)
-        return self.SELU_activation(h)
+        return self.ReLU_activation(h)
 
 
 class BiLSTM(nn.Module):
@@ -141,7 +141,7 @@ class SiameseClassifier(nn.Module):
     def __init__(self, args, device):
         super(SiameseClassifier, self).__init__()
         self.hidden_size = args.hidden_size
-        self.Tanh_activation = nn.Tanh()
+        self.ReLU_activation = nn.ReLU()
         self.Sigmoid_activation = torch.sigmoid
         self.features_linear_layer = nn.Linear(11, 64, bias=True)
         self.dense_protein = nn.Linear(128, 128, bias=True)
@@ -164,10 +164,10 @@ class SiameseClassifier(nn.Module):
 
     def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
-        amino_acids = self.Tanh_activation(self.features_linear_layer(amino_acids))
+        amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
         p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
         # concat learnable embeddings to amino-acids features
-        p = self.Tanh_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
         output_p = self.encoder_protein1(p)
         p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
 
@@ -204,10 +204,10 @@ class SiameseClassifier(nn.Module):
     def vec_of_couple(self, p, d, amino_acids):
         """ Vec representation of DNA and Protein. """
 
-        amino_acids = self.Tanh_activation(self.features_linear_layer(amino_acids))
+        amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
         p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
         # concat learnable embeddings to amino-acids features
-        p = self.Tanh_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
         output_p = self.encoder_protein1(p)
         p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
 
