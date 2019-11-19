@@ -4,6 +4,7 @@
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,15 +13,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1573671964676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1574179705029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="29">
-              <caret line="324" column="24" selection-start-line="324" selection-start-column="24" selection-end-line="324" selection-end-column="24" />
+            <state relative-caret-position="135">
+              <caret line="385" column="65" selection-start-line="385" selection-start-column="65" selection-end-line="385" selection-end-column="65" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -29,22 +30,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
+        <entry file="file://$PROJECT_DIR$/model/tmp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26400">
-              <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
+            <state relative-caret-position="139">
+              <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/model.py">
+        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="149" column="90" selection-start-line="149" selection-start-column="90" selection-end-line="149" selection-end-column="90" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="511">
+              <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -79,30 +80,22 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/model/model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="468">
+              <caret line="209" column="32" selection-start-line="209" selection-start-column="32" selection-end-line="209" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tqdm</find>
-      <find>train_</find>
-      <find>logging_info</find>
-      <find>train</find>
-      <find>init_amino_acid_data</find>
-      <find>roun</find>
-      <find>embedding_amino_acids</find>
-      <find>DecomposableAttention</find>
-      <find>0, 2</find>
-      <find>BiLSTM</find>
-      <find>save_dir</find>
-      <find>binds</find>
-      <find>file_name</find>
-      <find>get_proteins_data</find>
-      <find>init_dataset</find>
-      <find>create_dataset_loader</find>
-      <find>ProteinsDatasetClassification</find>
-      <find>create_dataset_loader_classification</find>
-      <find>train_or_classification</find>
-      <find>DataFr</find>
       <find>concat</find>
       <find>4</find>
       <find>p</find>
@@ -113,38 +106,58 @@
       <find>random</find>
       <find>1234</find>
       <find>random.</find>
+      <find>init_dataset</find>
+      <find>get_proteins_data</find>
+      <find>binds_dataset</find>
+      <find>cat_</find>
+      <find>NEW_2019_11_06_10:47:31_epoch_406_</find>
+      <find>2019_11_06_10:47:31_epoch_406_</find>
+      <find>precision</find>
+      <find>recall</find>
+      <find>2019_11_13_21:55:09/epoch_31</find>
+      <find>score_per_couple</find>
+      <find>npy</find>
+      <find>save</find>
+      <find>test_loader</find>
+      <find>test')</find>
+      <find>print('1')</find>
+      <find>SELU</find>
+      <find>logging</find>
+      <find>probas_</find>
+      <find>rep_of_couples__2019_11_13_21:29:36_epoch_31.</find>
+      <find>SELU_activation</find>
     </findStrings>
     <replaceStrings>
-      <replace>state_dict</replace>
-      <replace>double()</replace>
-      <replace>args.input_size</replace>
-      <replace>args.num_nucleotides</replace>
-      <replace>args.hidden_size</replace>
-      <replace>Decomposable_Attention</replace>
-      <replace>dict</replace>
-      <replace>DecomposableAttention</replace>
-      <replace>print</replace>
-      <replace>ProteinsDataset</replace>
-      <replace>p</replace>
-      <replace>amino_acids1</replace>
-      <replace>amino_acids</replace>
-      <replace>double</replace>
-      <replace>state_dict_f</replace>
-      <replace>state_dict_a</replace>
-      <replace>state_dict_b</replace>
-      <replace>state_dict_c</replace>
-      <replace>param</replace>
-      <replace>l_p</replace>
-      <replace>BS</replace>
-      <replace>test_</replace>
-      <replace>dev_</replace>
-      <replace>dev</replace>
-      <replace>test</replace>
-      <replace>5</replace>
-      <replace>6</replace>
-      <replace>7</replace>
       <replace>8</replace>
       <replace>np.random.shuffle</replace>
+      <replace>2019_11_13_21:55:09/epoch_31</replace>
+      <replace>recall</replace>
+      <replace>2019_11_14_09:05:35/epoch_42</replace>
+      <replace>loss</replace>
+      <replace>accuracy</replace>
+      <replace>precision</replace>
+      <replace>2019_11_13_21:29:36/epoch_25</replace>
+      <replace>logging.info</replace>
+      <replace>print('2')</replace>
+      <replace>print('3')</replace>
+      <replace>print('4')</replace>
+      <replace>print('5')</replace>
+      <replace>print('6')</replace>
+      <replace>print('7')</replace>
+      <replace>print('8')</replace>
+      <replace>print('9')</replace>
+      <replace>print('10')</replace>
+      <replace>print('11')</replace>
+      <replace>print('12')</replace>
+      <replace>print('13')</replace>
+      <replace>print('14')</replace>
+      <replace>print('15')</replace>
+      <replace>2019_11_14_09:05:35_epoch_42.p</replace>
+      <replace>SELU</replace>
+      <replace>2019_11_13_21:29:36_epoch_31.</replace>
+      <replace>2019_11_14_09:05:35_epoch_42.</replace>
+      <replace>rep_of_couples__2019_11_19_10:37:16_epoch_5.</replace>
+      <replace>Tanh_activation</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -154,9 +167,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/model/dictionary.py" />
         <option value="$PROJECT_DIR$/model/tmp.py" />
         <option value="$PROJECT_DIR$/model/model.py" />
-        <option value="$PROJECT_DIR$/model/dictionary.py" />
         <option value="$PROJECT_DIR$/model/main.py" />
       </list>
     </option>
@@ -173,7 +186,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -190,6 +202,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -221,7 +234,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="DNA" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -266,9 +279,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="tmp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DNA" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/tmp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.tmp" />
       </list>
     </recent_temporary>
   </component>
@@ -303,24 +339,28 @@
       <workItem from="1573473303415" duration="8805000" />
       <workItem from="1573507543766" duration="4687000" />
       <workItem from="1573548237750" duration="32524000" />
-      <workItem from="1573656050452" duration="3186000" />
+      <workItem from="1573656050452" duration="6495000" />
+      <workItem from="1573714602055" duration="1531000" />
+      <workItem from="1573729272780" duration="13612000" />
+      <workItem from="1573800911010" duration="2902000" />
+      <workItem from="1573974674006" duration="17886000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="228607000" />
+    <option name="totallyTimeSpent" value="267847000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15448049" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.097306214" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.5442765" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.49568033" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.1673866" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.35961124" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -328,16 +368,16 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
       <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.26457882" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.26293105" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="13" weight="0.18466523" />
+      <window_info anchor="bottom" id="Python Console" order="13" weight="0.14902808" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.47965738" visible="true" weight="0.29191864" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.47554806" visible="true" weight="0.04013194" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5203426" side_tool="true" visible="true" weight="0.29191864" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5244519" side_tool="true" visible="true" weight="0.04013194" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -413,19 +453,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/tmp.py</url>
-          <line>199</line>
-          <option name="timeStamp" value="26" />
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>405</line>
+          <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>95</line>
-          <option name="timeStamp" value="80" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>333</line>
-          <option name="timeStamp" value="81" />
+          <line>381</line>
+          <option name="timeStamp" value="85" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -440,6 +475,36 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
+        <expression-string>test_vec_rep.y_pred</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>__py_debug_temp_var_628787415[294]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>vec_per_couples.squeeze().tolist()[0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>vec_per_couples.squeeze().tolist()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>vec_per_couples[1]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>vec_per_couples[0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>random.shuffle(output3)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
@@ -451,36 +516,6 @@
       </expression>
       <expression>
         <expression-string>output2 = output1[1:4, :]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>output2 = output1[:, 1:4]</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>output1</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x: str(x))</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>print(pd.DataFrame(output[:,0]).apply(lambda x: str(x)).value_counts())</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x:str(x)).value_counts()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>pd.DataFrame(output[:,0]).apply(lambda x:str(x))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
@@ -546,16 +581,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/tmp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="201" column="38" selection-end-line="257" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/modules/activation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1110">
@@ -574,13 +599,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26400">
-          <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -608,22 +626,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
+    <entry file="file://$PROJECT_DIR$/model/tmp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="149" column="90" selection-start-line="149" selection-start-column="90" selection-end-line="149" selection-end-column="90" />
+        <state relative-caret-position="139">
+          <caret line="155" lean-forward="true" selection-start-line="155" selection-end-line="155" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="29">
-          <caret line="324" column="24" selection-start-line="324" selection-start-column="24" selection-end-line="324" selection-end-column="24" />
+        <state relative-caret-position="135">
+          <caret line="385" column="65" selection-start-line="385" selection-start-column="65" selection-end-line="385" selection-end-column="65" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="1762" column="27" selection-start-line="1762" selection-start-column="27" selection-end-line="1762" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="209" column="32" selection-start-line="209" selection-start-column="32" selection-end-line="209" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>

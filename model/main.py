@@ -25,7 +25,7 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--input_size', type=float, default=128, help='input size')
@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--train_or_classification', type=int, default=0, help='0 - train ranking, 1 - classification')
+    parser.add_argument('--train_or_classification', type=int, default=1, help='1 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
@@ -219,6 +219,32 @@ def classification(model, data_loader):
 
 
 """
+from couple to vec representation - using trained model "siamese decomposable-attention" to get this vector.
+ 
+input: model and data
+output: all vectors per couples of proteins and dna's
+"""
+
+
+def get_vector_rep_of_protein_and_dna(model, data_loader):
+    model.eval()
+    with torch.no_grad():
+        all_predictions, all_targets, all_proteins, all_dnas = [], [], [], []
+        for i, data in enumerate(tqdm(data_loader), 0):
+            # labels - binding score
+            proteins, dnas, labels, amino_acids = data
+            all_proteins += proteins.tolist()
+            all_dnas += dnas.tolist()
+            vec_per_couples = model.module.vec_of_couple(proteins, dnas, amino_acids)
+            all_predictions += vec_per_couples.squeeze().tolist()
+            all_targets += labels.tolist()
+    scores_df = pd.DataFrame(list(zip(all_proteins, all_dnas, all_targets, all_predictions)), columns=['protein', 'dna',
+                                                                                                       'y_true',
+                                                                                                       'y_pred'])
+    return scores_df
+
+
+"""
 test function
 """
 
@@ -302,8 +328,8 @@ def main():
         train_data, dev_data, test_data = get_proteins_data(train_proteins), get_proteins_data(dev_proteins), get_proteins_data(test_proteins)
 
         model = SiameseClassifier(args, device).double().to(device)
-        path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
-        model.load_state_dict(torch.load(path))
+        # path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
+        # model.load_state_dict(torch.load(path))
 
         model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
         print('create data loaders')
@@ -322,9 +348,8 @@ def main():
         print('\n --------- training --------\n')
         for epoch in range(1, args.epochs):
             logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
-            if epoch % 4 == 0:
-                train_data = get_proteins_data(train_proteins)
-                train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
+            train_data = get_proteins_data(train_proteins)
+            train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
 
             train(args, model, train_loader, optimizer, params, criterion)
             test(model, dev_loader, criterion)
@@ -338,158 +363,58 @@ def main():
         file_name = 'from_ranking_to_classification'
         logging.basicConfig(filename=file_name + '.txt', level=logging.DEBUG, filemode='w')
         logging.getLogger().setLevel(logging.INFO)
-        args.save_dir = os.path.join('../model', file_name)
+        # args.save_dir = os.path.join('../model', file_name)
         logging.getLogger().setLevel(logging.INFO)
-        train_data, dev_data, test_data = init_dataset(random.sample(dict.proteins, len(dict.proteins)),
-                                                       get_proteins_data_classification)
+
+        train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
+        train_data, dev_data, test_data = get_proteins_data_classification(train_proteins), \
+                                          get_proteins_data_classification(dev_proteins), \
+                                          get_proteins_data_classification(test_proteins)
+
         model = SiameseClassifier(args, device).double().to(device)
-        path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
+        path = '../model/2019_11_19_10:37:16/epoch_' + str(5) + '.pt'
         model.load_state_dict(torch.load(path))
         model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
         print('create data loaders')
-        '''
-        if i need to save results:
-            train_loader1 = create_dataset_loader_classification(train_data[3000000:3100000], amino_acids_emb, device, args)
-            train_loader2 = create_dataset_loader_classification(train_data[3100000:3200000], amino_acids_emb, device, args)       
-            df_1 = classification(model, train_loader1)
-            df_2 = classification(model, train_loader2)
-            frames = [df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8]
-            result = pd.concat(frames)
-            result.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___train4___.pkl'))
-        '''
-        print('1')
-        train_loader1 = create_dataset_loader_classification(train_data[:100000], amino_acids_emb, device, args)
-        train_loader2 = create_dataset_loader_classification(train_data[100000:200000], amino_acids_emb, device, args)
-        train_loader3 = create_dataset_loader_classification(train_data[200000:300000], amino_acids_emb, device, args)
-
-        print('2')
-        train_loader4 = create_dataset_loader_classification(train_data[300000:400000], amino_acids_emb, device, args)
-        train_loader5 = create_dataset_loader_classification(train_data[400000:500000], amino_acids_emb, device, args)
-        train_loader6 = create_dataset_loader_classification(train_data[500000:600000], amino_acids_emb, device, args)
-        train_loader7 = create_dataset_loader_classification(train_data[600000:700000], amino_acids_emb, device, args)
-
-        print('3')
-        train_loader8 = create_dataset_loader_classification(train_data[700000:800000], amino_acids_emb, device, args)
-        train_loader9 = create_dataset_loader_classification(train_data[800000:900000], amino_acids_emb, device, args)
-        df_1 = classification(model, train_loader1)
-        df_2 = classification(model, train_loader2)
-        df_3 = classification(model, train_loader3)
-        df_4 = classification(model, train_loader4)
-        print('4')
-        df_5 = classification(model, train_loader5)
-        df_6 = classification(model, train_loader6)
-        df_7 = classification(model, train_loader7)
-        df_8 = classification(model, train_loader8)
-        df_9 = classification(model, train_loader9)
-        frames = [df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9]
-        result = pd.concat(frames)
-        result.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___train1___.pkl'))
-        train_loader10 = create_dataset_loader_classification(train_data[900000:1000000], amino_acids_emb, device, args)
-        print('5')
-        train_loader11 = create_dataset_loader_classification(train_data[1000000:1100000], amino_acids_emb, device, args)
-        train_loader12 = create_dataset_loader_classification(train_data[1100000:1200000], amino_acids_emb, device, args)
-        train_loader13 = create_dataset_loader_classification(train_data[1200000:1300000], amino_acids_emb, device, args)
-        train_loader14 = create_dataset_loader_classification(train_data[1300000:1400000], amino_acids_emb, device, args)
-        print('6')
-        train_loader15 = create_dataset_loader_classification(train_data[1400000:1500000], amino_acids_emb, device, args)
-        train_loader16 = create_dataset_loader_classification(train_data[1500000:1600000], amino_acids_emb, device, args)
-        train_loader17 = create_dataset_loader_classification(train_data[1600000:1700000], amino_acids_emb, device, args)
-        train_loader18 = create_dataset_loader_classification(train_data[1700000:1800000], amino_acids_emb, device, args)
-        print('7')
-        train_loader19 = create_dataset_loader_classification(train_data[1800000:1900000], amino_acids_emb, device, args)
-
-
-        df_0 = classification(model, train_loader10)
-        df_1 = classification(model, train_loader11)
-        df_2 = classification(model, train_loader12)
-        df_3 = classification(model, train_loader13)
-        df_4 = classification(model, train_loader14)
-        print('8')
-        df_5 = classification(model, train_loader15)
-        df_6 = classification(model, train_loader16)
-        df_7 = classification(model, train_loader17)
-        df_8 = classification(model, train_loader18)
-        df_9 = classification(model, train_loader19)
-        print('9')
-        frames = [df_0, df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9]
-        result = pd.concat(frames)
-        result.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___train2___.pkl'))
-
-
-
-        train_loader20 = create_dataset_loader_classification(train_data[1900000:2000000], amino_acids_emb, device, args)
-        train_loader21 = create_dataset_loader_classification(train_data[2000000:2100000], amino_acids_emb, device, args)
-        train_loader22 = create_dataset_loader_classification(train_data[2100000:2200000], amino_acids_emb, device, args)
-        train_loader23 = create_dataset_loader_classification(train_data[2200000:2300000], amino_acids_emb, device, args)
-        print('10')
-        train_loader24 = create_dataset_loader_classification(train_data[2300000:2400000], amino_acids_emb, device, args)
-        train_loader25 = create_dataset_loader_classification(train_data[2400000:2500000], amino_acids_emb, device, args)
-        train_loader26 = create_dataset_loader_classification(train_data[2500000:2600000], amino_acids_emb, device, args)
-        train_loader27 = create_dataset_loader_classification(train_data[2600000:2700000], amino_acids_emb, device, args)
-        train_loader28 = create_dataset_loader_classification(train_data[2700000:2800000], amino_acids_emb, device, args)
-        print('11')
-        train_loader29 = create_dataset_loader_classification(train_data[2800000:2900000], amino_acids_emb, device, args)
-
-
-        df_0 = classification(model, train_loader20)
-        df_1 = classification(model, train_loader21)
-        df_2 = classification(model, train_loader22)
-        df_3 = classification(model, train_loader23)
-        print('12')
-        df_4 = classification(model, train_loader24)
-        df_5 = classification(model, train_loader25)
-        df_6 = classification(model, train_loader26)
-        df_7 = classification(model, train_loader27)
-        print('13')
-        df_8 = classification(model, train_loader28)
-        df_9 = classification(model, train_loader29)
-        frames = [df_0, df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9]
-        result = pd.concat(frames)
-        print('14')
-        result.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___train3__.pkl'))
-
-
-        train_loader30 = create_dataset_loader_classification(train_data[2900000:3000000], amino_acids_emb, device, args)
-        train_loader31 = create_dataset_loader_classification(train_data[3000000:3100000], amino_acids_emb, device, args)
-        train_loader32 = create_dataset_loader_classification(train_data[3100000:3200000], amino_acids_emb, device, args)
-        print('15')
-        train_loader33 = create_dataset_loader_classification(train_data[3200000:3300000], amino_acids_emb, device, args)
-        train_loader34 = create_dataset_loader_classification(train_data[3300000:3400000], amino_acids_emb, device, args)
-        train_loader35 = create_dataset_loader_classification(train_data[3400000:3500000], amino_acids_emb, device, args)
-        train_loader36 = create_dataset_loader_classification(train_data[3500000:3600000], amino_acids_emb, device, args)
-        print('16')
-        train_loader37 = create_dataset_loader_classification(train_data[3600000:3700000], amino_acids_emb, device, args)
-        train_loader38 = create_dataset_loader_classification(train_data[3700000:], amino_acids_emb, device, args)
-
-        df_0 = classification(model, train_loader30)
-        df_1 = classification(model, train_loader31)
-        df_2 = classification(model, train_loader32)
-        print('17')
-        df_3 = classification(model, train_loader33)
-        df_4 = classification(model, train_loader34)
-        df_5 = classification(model, train_loader35)
-        df_6 = classification(model, train_loader36)
-        print('18')
-        df_7 = classification(model, train_loader37)
-        df_8 = classification(model, train_loader38)
-        frames = [df_0, df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9]
-        result = pd.concat(frames)
-        print('19')
-        result.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___train4___.pkl'))
-
-        # print('train')
-        # train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
-        # df_train = classification(model, train_loader)
-        # # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
-        # print('dev')
-        # dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
-        # df_dev = classification(model, dev_loader)
-        # df_dev.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___dev___.pkl'))
-        # print('test')
-        # test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
-        # df_test = classification(model, test_loader)
-        # df_test.to_pickle(os.path.join('../model', 'NEW_2019_11_06_10:47:31_epoch_406___test___.pkl'))
-        # logging.info('finished')
+        print('test')
+        test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+        test_vec_rep = get_vector_rep_of_protein_and_dna(model, test_loader)
+        test_vec_rep.to_pickle('test_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('dev')
+        dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        dev_vec_rep = get_vector_rep_of_protein_and_dna(model, dev_loader)
+        dev_vec_rep.to_pickle('dev_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('train')
+        train_loader = create_dataset_loader_classification(train_data[:1000000], amino_acids_emb, device, args)
+        train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
+        train_vec_rep.to_pickle('train_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('ok')
+        print('train1')
+        train_loader = create_dataset_loader_classification(train_data[1000000:2000000], amino_acids_emb, device, args)
+        train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
+        train_vec_rep.to_pickle('train1_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('ok')
+        print('train2')
+        train_loader = create_dataset_loader_classification(train_data[2000000:3000000], amino_acids_emb, device, args)
+        train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
+        train_vec_rep.to_pickle('train2_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('ok')
+        print('train3')
+        train_loader = create_dataset_loader_classification(train_data[3000000:], amino_acids_emb, device, args)
+        train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
+        train_vec_rep.to_pickle('train3_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        print('ok')
+        exit()
+        # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))
+        print('dev')
+        dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        df_dev = classification(model, dev_loader)
+        df_dev.to_pickle('2019_11_13_21:29:36_epoch_31.___dev___.pkl')
+        print('test')
+        test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+        df_test = classification(model, test_loader)
+        df_test.to_pickle('2019_11_13_21:29:36_epoch_31.___test___.pkl')
+        logging.info('finished')
 
 
 if __name__ == '__main__':
