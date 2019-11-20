@@ -22,7 +22,7 @@ from torch.nn import DataParallel
 def parse_args():
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=1e-2, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=1e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
     parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--train_or_classification', type=int, default=0, help='1 - train ranking, 1 - classification')
+    parser.add_argument('--train_or_classification', type=int, default=1, help='1 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
@@ -240,20 +240,38 @@ test function
 
 def test(model, test_loader, criterion, device):
     model.eval()
+    all_predictions, all_targets, all_proteins, all_dnas = [], [], [], []
+
     with torch.no_grad():
-        epoch_start_time = time.time()
-        total_loss = 0.
         count = 0
         for i, data in enumerate(tqdm(test_loader), 0):
             proteins, dnas, labels, amino_acids = data
             prediction = model(proteins, dnas, amino_acids)
             count += len(prediction)
-            loss = criterion(prediction.squeeze(), labels.to(device).double())
-            total_loss += loss.item()
-        logging.info(
-            '| time: {:5.2f}s | test loss {:5.8f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count))
-
-
+            all_predictions += prediction.squeeze().tolist()
+            all_targets += labels.tolist()
+        pred = np.array(all_predictions)
+        true = np.array(all_targets)
+        tp = list((pred > 0.2) & (true > 0.2)).count(True)
+        fp = list((pred > 0.2) & (true < 0.1)).count(True)
+        tn = list((pred < 0.1) & (true < 0.1)).count(True)
+        fn = list((pred < 0.1) & (true > 0.2)).count(True)
+        print('-----')
+        try:
+            acc = (tp + tn) / (tp + tn + fp + fn) * 100
+            precision = tp / (tp + fp) * 100
+            recall = tp / (tp + fn) * 100
+            print(
+                f'      precision: {tp} / {tp + fp} = {precision}\n      recall: {tp} / {tp + fn} = {recall}\n      accuracy: {tp + tn} / {tp + tn + fp + fn} = {acc}')
+            print(tp)
+            print(fp)
+            print(tn)
+            print(fn)
+        except:
+            print(tp)
+            print(fp)
+            print(tn)
+            print(fn)
 """
 create_dataset_loader
 """
@@ -334,7 +352,30 @@ def main():
             logging.info('-' * 89)
             with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
                 torch.save(model.module.state_dict(), f)
-        test(model, test_loader, criterion)
+        test(model, test_loader, criterion, device)
+    else:
+
+        train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
+        train_data = get_proteins_data_classification(train_proteins)
+        dev_data = get_proteins_data_classification(dev_proteins)
+        test_data = get_proteins_data_classification(test_proteins)
+
+        model = SiameseClassifier(args, device).double().to(device)
+        path = '../model/2019_11_20_10:07:23/epoch_17.pt'
+        model.load_state_dict(torch.load(path))
+
+        model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
+        print('create data loaders')
+
+        train_loader = create_dataset_loader_classification(train_data, amino_acids_emb, device, args)
+        dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+
+        logging.info(f'The model has {count_parameters(model):,} trainable parameters')
+        criterion = nn.MSELoss().to(device)
+        test(model, train_loader, criterion, device)
+        test(model, dev_loader, criterion, device)
+        test(model, test_loader, criterion, device)
 
 
 if __name__ == '__main__':
