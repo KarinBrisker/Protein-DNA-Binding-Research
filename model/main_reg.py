@@ -182,7 +182,6 @@ def train(args, model, train_loader, optimizer, params, criterion, device):
         # get the inputs - protein, dna, label, amino_acids
         proteins, dnas, labels, amino_acids = data
         prediction = model(proteins, dnas, amino_acids)
-        print(prediction.squeeze().tolist()[:10])
         count += len(prediction)
         loss = criterion(prediction.squeeze(), labels.to(device).double())
         optimizer.zero_grad()
@@ -326,8 +325,7 @@ def main():
         for attr, value in sorted(args.__dict__.items()):
             logging.info("\t{}={}".format(attr.upper(), value))
 
-        train_proteins, dev_proteins, test_proteins = [dict.proteins[0]],[dict.proteins[1]],[dict.proteins[2]]
-        # train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
+        train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
         train_data, dev_data, test_data = get_proteins_data_classification(train_proteins), \
                                           get_proteins_data_classification(dev_proteins), \
                                           get_proteins_data_classification(test_proteins)
@@ -348,15 +346,13 @@ def main():
         params = list(params_model) + list(criterion.parameters())
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr)  # Stochastic Gradient Descent
 
-        # optimizer = optim.Adam(params, lr=args.lr, weight_decay=args.wdecay)
-
         if not os.path.isdir(args.save_dir):
             os.makedirs(args.save_dir)
 
         print('\n --------- training --------\n')
         for epoch in range(1, args.epochs):
             train(args, model, train_loader, optimizer, params, criterion, device)
-            # test(model, dev_loader, criterion, device)
+            test(model, dev_loader, criterion, device)
             logging.info('-' * 89)
             with open(os.path.join(args.save_dir, 'epoch_' + str(epoch) + '.pt'), 'wb') as f:
                 torch.save(model.module.state_dict(), f)
