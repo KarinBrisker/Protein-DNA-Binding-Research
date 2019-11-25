@@ -22,19 +22,19 @@ from torch.nn import DataParallel
 def parse_args():
     parser = argparse.ArgumentParser(description='DNA Model - siamese notwork of Decomposable-attention')
     parser.add_argument('--data_path', type=str, default='../DNA_data/dataframe_dataset.csv', help='data corpus')
-    parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
+    parser.add_argument('--lr', type=float, default=1e-2, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1234, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
-    parser.add_argument('--input_size', type=float, default=128, help='input size')
-    parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
+    parser.add_argument('--hidden_size', type=float, default=64, help='hidden size')
     parser.add_argument('--beta', type=float, default=0.5, help='beta')
     parser.add_argument('--num_layers', type=float, default=2, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--train_or_classification', type=int, default=1, help='1 - train ranking, 1 - classification')
+    parser.add_argument('--num_proteins', type=float, default=142, help='num all proteins in the dataset')
+    parser.add_argument('--train_or_classification', type=int, default=0, help='1 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=32,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
@@ -52,7 +52,7 @@ this features are: MMS exposure, un-ordering etc.
 
 def init_amino_acid_data():
     print('loading amino acids embeddings')
-    embeddings = {}
+    embeddings = []
     for p in tqdm(dict.proteins):
         path = '../DNA_data/amino_acid_data/' + p + '.txt'
         emb = []
@@ -62,8 +62,8 @@ def init_amino_acid_data():
                 e = np.fromstring(emb_amino.strip(), dtype=float, sep='\t')
                 emb.append(torch.tensor(e))
             emb += [np.array(np.zeros(11))] * (200 - len(emb_amino_acids))
-            embeddings[p] = torch.tensor(np.stack(emb, axis=0))
-    return embeddings
+            embeddings.append(torch.tensor(np.stack(emb, axis=0)).view(-1))
+    return torch.stack(embeddings)
 
 
 # converts dna to sequence indexes tensor
@@ -282,9 +282,9 @@ create_dataset_loader
 """
 
 
-def create_dataset_loader(data, amino_acids_emb, device, args):
+def create_dataset_loader(data, dict, device, args):
     # "protein", "protein_name", "dna1", "score1", "dna2", "score2"]
-    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], data[:, 4], data[:, 5], amino_acids_emb,
+    dataset = ProteinsDataset(data[:, 0], data[:, 1], data[:, 2], data[:, 3], data[:, 4], data[:, 5], dict,
                               device)
     loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     return loader
@@ -300,6 +300,21 @@ def create_dataset_loader_classification(data, amino_acids_emb, device, args):
     dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb, device)
     loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     return loader
+
+
+"""
+lr scheduler
+"""
+
+
+def exp_lr_scheduler(optimizer, epoch, init_lr=0.001, lr_decay_epoch=25):
+    """Decay learning rate by a factor of 0.1 every lr_decay_epoch epochs."""
+    lr = init_lr * (0.5**(epoch // lr_decay_epoch))
+    print('LR is set to {}'.format(lr))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+
+    return optimizer
 
 
 """
@@ -330,15 +345,14 @@ def main():
         train_data, dev_data, test_data = get_proteins_data(train_proteins), get_proteins_data(
             dev_proteins), get_proteins_data(test_proteins)
 
-        model = SiameseClassifier(args, device).double().to(device)
+        model = SiameseClassifier(args, device, amino_acids_emb).double().to(device)
         # path = '../model/2019_11_06_10:47:31/epoch_' + str(406) + '.pt'
         # model.load_state_dict(torch.load(path))
 
         model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
         print('create data loaders')
-        train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
-        dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
-        test_loader = create_dataset_loader(test_data, amino_acids_emb, device, args)
+        dev_loader = create_dataset_loader(dev_data, dict, device, args)
+        test_loader = create_dataset_loader(test_data, dict, device, args)
         logging.info(f'The model has {count_parameters(model):,} trainable parameters')
         criterion = nn.BCELoss().to(device)
         params_model = filter(lambda p: p.requires_grad, model.parameters())
@@ -352,8 +366,9 @@ def main():
         for epoch in range(1, args.epochs):
             logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
             train_data = get_proteins_data(train_proteins)
-            train_loader = create_dataset_loader(train_data, amino_acids_emb, device, args)
-
+            train_loader = create_dataset_loader(train_data, dict, device, args)
+            if epoch % 25 == 0:
+                optimizer = exp_lr_scheduler(optimizer, epoch, 0.01)
             train(args, model, train_loader, optimizer, params, criterion)
             test(model, dev_loader, criterion)
             logging.info('-' * 89)
@@ -365,47 +380,57 @@ def main():
     else:
         file_name = 'from_ranking_to_classification'
         logging.basicConfig(filename=file_name + '.txt', level=logging.DEBUG, filemode='w')
-        logging.getLogger().setLevel(logging.INFO)
         # args.save_dir = os.path.join('../model', file_name)
         logging.getLogger().setLevel(logging.INFO)
-
         train_proteins, dev_proteins, test_proteins = init_dataset(random.sample(dict.proteins, len(dict.proteins)))
         train_data, dev_data, test_data = get_proteins_data_classification(train_proteins), \
                                           get_proteins_data_classification(dev_proteins), \
                                           get_proteins_data_classification(test_proteins)
-
-        model = SiameseClassifier(args, device).double().to(device)
-        path = '../model/2019_11_19_10:37:16/epoch_' + str(5) + '.pt'
-        model.load_state_dict(torch.load(path))
-        model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
-        print('create data loaders')
-        print('test')
+        # test_data = get_proteins_data(test_proteins)
         test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+        '''
+        for i in range(37,200):
+            logging.info(f'epoch:{i}')
+            model = SiameseClassifier(args, device).double().to(device)
+            path = '../model/2019_11_21_13:48:13/epoch_'+str(i)+'.pt'
+            model.load_state_dict(torch.load(path))
+            model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
+            print('create data loaders')
+            print('test')
+            criterion = nn.BCELoss().to(device)
+
+            test(model, test_loader, criterion)
+        '''
+        model = SiameseClassifier(args, device).double().to(device)
+        path = '../model/2019_11_21_13:48:13/epoch_31.pt'
+        model.load_state_dict(torch.load(path))
+        model = DataParallel(model, device_ids=[2, 0, 1], output_device=2)  # run on all 4 gpu
+
         test_vec_rep = get_vector_rep_of_protein_and_dna(model, test_loader)
-        test_vec_rep.to_pickle('test_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        test_vec_rep.to_pickle('test_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('dev')
         dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
         dev_vec_rep = get_vector_rep_of_protein_and_dna(model, dev_loader)
-        dev_vec_rep.to_pickle('dev_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        dev_vec_rep.to_pickle('dev_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('train')
         train_loader = create_dataset_loader_classification(train_data[:1000000], amino_acids_emb, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        train_vec_rep.to_pickle('train_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('ok')
         print('train1')
         train_loader = create_dataset_loader_classification(train_data[1000000:2000000], amino_acids_emb, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train1_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        train_vec_rep.to_pickle('train1_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('ok')
         print('train2')
         train_loader = create_dataset_loader_classification(train_data[2000000:3000000], amino_acids_emb, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train2_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        train_vec_rep.to_pickle('train2_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('ok')
         print('train3')
         train_loader = create_dataset_loader_classification(train_data[3000000:], amino_acids_emb, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train3_vec_rep_of_couples__2019_11_19_10:37:16_epoch_5.pkl')
+        train_vec_rep.to_pickle('train3_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
         print('ok')
         exit()
         # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))

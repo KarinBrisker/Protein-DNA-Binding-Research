@@ -43,7 +43,7 @@ def parse_args():
     parser.add_argument('--num_layers', type=float, default=1, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--train_or_classification', type=int, default=0, help='1 - train ranking, 1 - classification')
+    parser.add_argument('--train_or_classification', type=int, default=1, help='1 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
@@ -250,7 +250,7 @@ test function
 """
 
 
-def test(model, test_loader, criterion, device):
+def test(model, test_loader, criterion, device, file_name):
     model.eval()
     all_predictions, all_targets, all_proteins, all_dnas = [], [], [], []
     epoch_start_time = time.time()
@@ -268,12 +268,12 @@ def test(model, test_loader, criterion, device):
             total_loss += loss.item()
         logging.info(
             '| time: {:5.2f}s | train loss {:8.9f}'.format((time.time() - epoch_start_time), total_loss * 1.0 / count))
-        # plt.figure(figsize=(15, 15))
-        # plt.scatter(all_targets, all_predictions, zorder=1, edgecolor='k', s=3, c="dodgerblue")
-        # plt.ylabel('Train Y - pred', fontsize=14)
-        # plt.xlabel('Train Y - true', fontsize=14)
-        # plt.title('Train Y - true vs. Y - pred', fontsize=18, y=1.03)
-        # plt.savefig('foo.png')
+        plt.figure(figsize=(15, 15))
+        plt.scatter(all_targets, all_predictions, zorder=1, edgecolor='k', s=3, c="dodgerblue")
+        plt.ylabel('Train Y - pred', fontsize=14)
+        plt.xlabel('Train Y - true', fontsize=14)
+        plt.title('Train Y - true vs. Y - pred', fontsize=18, y=1.03)
+        plt.savefig(file_name+'.png')
 
 
 """
@@ -365,7 +365,7 @@ def main():
         test_data = get_proteins_data_classification(test_proteins)
 
         model = SiameseClassifier(args, device).double().to(device)
-        path = '../model/2019_11_20_10:07:23/epoch_17.pt'
+        path = '../model/2019_11_21_01:53:25/epoch_8.pt'
         model.load_state_dict(torch.load(path))
 
         model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
@@ -377,9 +377,9 @@ def main():
 
         logging.info(f'The model has {count_parameters(model):,} trainable parameters')
         criterion = nn.MSELoss().to(device)
-        test(model, train_loader, criterion, device)
-        test(model, dev_loader, criterion, device)
-        test(model, test_loader, criterion, device)
+        test(model, train_loader, criterion, device, 'train')
+        test(model, dev_loader, criterion, device, 'dev')
+        test(model, test_loader, criterion, device, 'test')
 
 
 if __name__ == '__main__':

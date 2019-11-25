@@ -28,28 +28,13 @@ network/main.py
 
 # F - bi-LSTM model
 class DecomposableAttention(nn.Module):
-    def __init__(self, hidden_dim, use_BN=True, dropout_rate=0.5):
+    def __init__(self, hidden_dim):
         super(DecomposableAttention, self).__init__()
-
-        # linear -> BN -> relu -> dropout -> linear -> relu
-        def MLP(input_dim, output_dim, use_BN, dropout_rate):
-            layers = [nn.Linear(input_dim, output_dim)]
-            if use_BN:
-                layers.append(nn.BatchNorm1d(output_dim, affine=True))
-            layers.append(nn.SELU())
-            layers.append(nn.Dropout(p=dropout_rate))
-
-            layers.append(nn.Linear(output_dim, output_dim))
-            layers.append(nn.SELU())
-
-            mlp = nn.Sequential(*layers)
-
-            return mlp
-
         self.hidden_dim = hidden_dim
-        self.G = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
-        self.H = MLP(hidden_dim * 2, hidden_dim, use_BN, dropout_rate)
-        self.SELU_activation = nn.SELU()
+        self.G = self.mlp(hidden_dim * 2, hidden_dim)
+        self.dropout = nn.Dropout(0.2)
+        self.ReLU_activation = nn.ReLU()
+        self.H = self.mlp(hidden_dim * 2, hidden_dim)
 
     # CHECKED #
     # p - bs, p_len, embedding_size
@@ -82,9 +67,22 @@ class DecomposableAttention(nn.Module):
         # equation (5) in paper:
         v1_cat_v2 = torch.cat((v1, v2), dim=1)  # v1_cat_v2: (batch_size x (hidden_dim * 2))
         h = self.H(v1_cat_v2)
-
+        # print(h[0])
         # h - (bs, hidden_dim)
-        return self.SELU_activation(h)
+        return h
+
+    def mlp(self, input_dim, output_dim):
+        # linear -> BN -> relu -> dropout -> linear -> relu
+        mlp_layers = []
+        mlp_layers.append(nn.Dropout(p=0.2))
+        mlp_layers.append(nn.Linear(
+            input_dim, output_dim, bias=True))
+        mlp_layers.append(nn.ReLU())
+        mlp_layers.append(nn.Dropout(p=0.2))
+        mlp_layers.append(nn.Linear(
+            output_dim, output_dim, bias=True))
+        # mlp_layers.append(nn.ReLU())
+        return nn.Sequential(*mlp_layers)
 
 
 class BiLSTM(nn.Module):
@@ -108,7 +106,8 @@ class BiLSTM(nn.Module):
         # sending tensors to the device of the input -> important for data parallelism
         h0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).double().to(x.device)  # 2 for bidirectional
         c0 = torch.zeros(self.num_layers * 2, x.size(0), self.hidden_size).double().to(x.device)
-
+        torch.nn.init.xavier_uniform_(h0)
+        torch.nn.init.xavier_uniform_(c0)
         # Forward propagate LSTM. out: tensor of shape (batch_size, seq_length, hidden_size * num directions)
         out, _ = self.lstm(x, (h0, c0))
         out = self.fc(out)
@@ -138,36 +137,44 @@ class SiameseClassifier(nn.Module):
     """ Sentence similarity estimator implementing a siamese arcitecture. Uses pretrained word2vec embeddings.
     Different to the paper, the weights are untied, to avoid exploding/ vanishing gradients. """
 
-    def __init__(self, args, device):
+    def __init__(self, args, device, pretrained_amino_acids_features):
+
         super(SiameseClassifier, self).__init__()
         self.hidden_size = args.hidden_size
-        self.ReLU_activation = nn.Tanh()
+        self.ReLU_activation = nn.ReLU()
+        self.tanh_activation = nn.Tanh()
         self.Sigmoid_activation = torch.sigmoid
-        self.features_linear_layer = nn.Linear(11, 32, bias=True)
-        self.dense_protein = nn.Linear(64, 32, bias=True)
+        self.features_linear_layer = nn.Linear(11, args.embedding_dim, bias=True)
+        self.dense_protein = nn.Linear(args.embedding_dim * 2, args.embedding_dim * 2, bias=True)
 
         # protein
-        self.embedding_amino_acids = nn.Embedding(args.num_amino_acids, args.embedding_dim,
+        self.protein_embeddings = nn.Embedding(args.num_amino_acids, args.embedding_dim,
                                                   padding_idx=args.num_amino_acids - 1)
+
+        # protein 11 features - pretrained
+        self.embedding_amino_acids = nn.Embedding(args.num_proteins, 200 * 11)
+        self.embedding_amino_acids.weight.data.copy_(pretrained_amino_acids_features)
+
         # dna
         self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
         # Initialize constituent network
-        self.encoder_protein = BiLSTM(args, args.input_size, device)
+        self.encoder_protein = BiLSTM(args, args.embedding_dim*2, device)
         # Initialize constituent network
-        self.encoder_dna = BiLSTM(args, int(args.input_size / 2), device)
+        self.encoder_dna = BiLSTM(args, args.embedding_dim, device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
-        self.output_fc = nn.Linear(self.hidden_size, 1, bias=True)
+        self.output_fc = nn.Linear(args.hidden_size, 1, bias=True)
 
         # Initialize network parameters
         self.initialize_parameters()
         self.device = device
 
-    def forward(self, p, d1, d2, amino_acids):
+    def forward(self, p, d1, d2, p_idx):
         """ Performs a single forward pass through the siamese architecture. """
-        amino_acids = self.tanh_activation(self.features_linear_layer(amino_acids))
-        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        amino_acids = self.embedding_amino_acids(p_idx).view(-1, 200, 11)
+        amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
+        p = self.protein_embeddings(p)  # p: (batch_size x l_p x embedding_dim)
         # concat learnable embeddings to amino-acids features
-        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))# p: (batch_size x l_p x embedding_dim * 2)
         output_p = self.encoder_protein(p)
         p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
 

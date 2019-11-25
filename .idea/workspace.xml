@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84049109-9c2d-44b7-9c9e-c9680f0b4050" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/main_reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/main_reg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,15 +16,15 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DNA$main_reg.coverage" NAME="main_reg Coverage Results" MODIFIED="1574293325094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1574257420613" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1574692315222" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="310" column="10" lean-forward="true" selection-start-line="310" selection-start-column="10" selection-end-line="310" selection-end-column="10" />
+            <state relative-caret-position="209">
+              <caret line="253" column="4" selection-start-line="253" selection-start-column="4" selection-end-line="253" selection-end-column="4" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -28,28 +32,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/model/main_reg.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="184" column="46" lean-forward="true" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/model_reg.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="222" selection-start-line="222" selection-end-line="222" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/tmp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
+            <state relative-caret-position="232">
               <caret line="155" selection-start-line="155" selection-end-line="155" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
@@ -88,8 +74,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/dictionary.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+            <state relative-caret-position="643">
+              <caret line="110" selection-start-line="110" selection-end-line="110" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -97,14 +83,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="523">
-              <caret line="179" column="65" lean-forward="true" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
+            <state relative-caret-position="-362">
+              <caret line="183" column="40" lean-forward="true" selection-start-line="183" selection-start-column="40" selection-end-line="183" selection-end-column="40" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/modules/sparse.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-281">
+              <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -113,44 +108,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>2019_11_13_21:55:09/epoch_31</find>
-      <find>npy</find>
-      <find>save</find>
-      <find>test_loader</find>
-      <find>test')</find>
-      <find>print('1')</find>
+      <find>logging.info(</find>
+      <find>zero</find>
+      <find>DecomposableAttention</find>
+      <find>dropout</find>
       <find>SELU</find>
-      <find>SELU_activation</find>
-      <find>rep_of_couples__2019_11_13_21:29:36_epoch_31.</find>
-      <find>probas_</find>
-      <find>score_per_couple</find>
-      <find>vec_of_couple</find>
-      <find>ProteinsDatasetClassification</find>
-      <find>get_proteins_data</find>
-      <find>0.2</find>
-      <find>init_dataset</find>
-      <find>get_proteins_data_classification</find>
-      <find>sigmoid</find>
-      <find>loss =</find>
-      <find>criterion</find>
-      <find>CRITERION(</find>
-      <find>count</find>
-      <find>encoder_protein1</find>
-      <find>shu</find>
-      <find>logging</find>
-      <find>encoder_dna1</find>
-      <find>train_or_classification</find>
-      <find>Tanh</find>
-      <find>adam</find>
-      <find>device</find>
+      <find>test(</find>
+      <find>self.hidden_dim</find>
+      <find>tes</find>
+      <find>train accuracy</find>
+      <find>64</find>
+      <find>32</find>
+      <find>dense_protein</find>
+      <find>args.input_size,</find>
+      <find>args.input_size</find>
+      <find>amino</find>
+      <find>dict.</find>
+      <find>ProteinsDataset</find>
+      <find>dict</find>
+      <find>SiameseClassifier</find>
+      <find>create_dataset_loader</find>
+      <find>embedding_amino_acids</find>
+      <find>[2,</find>
+      <find>protein_embeddings</find>
+      <find>test</find>
+      <find>ReLU_activation</find>
+      <find>self.ReLU_activation(</find>
+      <find>tanh_activation</find>
+      <find>train loss</find>
+      <find>protein2idx</find>
+      <find>15</find>
     </findStrings>
     <replaceStrings>
-      <replace>2019_11_13_21:55:09/epoch_31</replace>
-      <replace>recall</replace>
-      <replace>2019_11_14_09:05:35/epoch_42</replace>
-      <replace>loss</replace>
-      <replace>accuracy</replace>
-      <replace>precision</replace>
       <replace>2019_11_13_21:29:36/epoch_25</replace>
       <replace>logging.info</replace>
       <replace>print('2')</replace>
@@ -174,7 +163,13 @@
       <replace>2019_11_14_09:05:35_epoch_42.</replace>
       <replace>rep_of_couples__2019_11_19_10:37:16_epoch_5.</replace>
       <replace>encoder_dna</replace>
+      <replace>2019_11_21_13:48:13</replace>
+      <replace>epoch_28.p</replace>
+      <replace>epoch_31.</replace>
       <replace>ReLU</replace>
+      <replace>print(</replace>
+      <replace>args.hidden_size</replace>
+      <replace>args.hidden_size * 2</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -184,12 +179,12 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/model/dictionary.py" />
         <option value="$PROJECT_DIR$/model/tmp.py" />
-        <option value="$PROJECT_DIR$/model/main.py" />
         <option value="$PROJECT_DIR$/model/model_reg.py" />
-        <option value="$PROJECT_DIR$/model/model.py" />
         <option value="$PROJECT_DIR$/model/main_reg.py" />
+        <option value="$PROJECT_DIR$/model/model.py" />
+        <option value="$PROJECT_DIR$/model/dictionary.py" />
+        <option value="$PROJECT_DIR$/model/main.py" />
       </list>
     </option>
   </component>
@@ -253,7 +248,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main_reg">
+  <component name="RunManager" selected="Python.main">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="DNA" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -344,8 +339,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main_reg" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.main_reg" />
         <item itemvalue="Python.tmp" />
       </list>
     </recent_temporary>
@@ -386,24 +381,32 @@
       <workItem from="1573729272780" duration="13612000" />
       <workItem from="1573800911010" duration="2902000" />
       <workItem from="1573974674006" duration="34318000" />
-      <workItem from="1574285517264" duration="7900000" />
+      <workItem from="1574285517264" duration="9694000" />
+      <workItem from="1574328322153" duration="6654000" />
+      <workItem from="1574363374024" duration="272000" />
+      <workItem from="1574365077920" duration="3401000" />
+      <workItem from="1574592462358" duration="5868000" />
+      <workItem from="1574631559500" duration="8399000" />
+      <workItem from="1574671102096" duration="4372000" />
+      <workItem from="1574680421126" duration="244000" />
+      <workItem from="1574680685517" duration="11761000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="292179000" />
+    <option name="totallyTimeSpent" value="334944000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09840572" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.050577242" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.1673866" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.30669546" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23326133" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3563715" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -411,16 +414,16 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
       <window_info anchor="bottom" id="File Transfer" order="9" weight="0.17926566" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.10367171" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.25917926" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.14902808" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4954296" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.47469878" visible="true" weight="0.04013194" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.6394366" visible="true" weight="0.04013194" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5253012" side_tool="true" visible="true" weight="0.04013194" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.36056337" side_tool="true" visible="true" weight="0.04013194" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -496,19 +499,24 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>179</line>
-          <option name="timeStamp" value="86" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>271</line>
-          <option name="timeStamp" value="88" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/main_reg.py</url>
-          <line>185</line>
+          <line>184</line>
           <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>213</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>204</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>71</line>
+          <option name="timeStamp" value="105" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -523,104 +531,104 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
-        <expression-string>prediction.squeeze().tolist()[:10]</expression-string>
+        <expression-string>train_data[:]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.squeeze().tolist()[:3]</expression-string>
+        <expression-string>(amino_acids[0][3])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.squeeze()</expression-string>
+        <expression-string>(amino_acids[0][2])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>dict.proteins[2]</expression-string>
+        <expression-string>(amino_acids[0][1])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>dict.proteins[1]</expression-string>
+        <expression-string>(amino_acids[0][0])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>dict.proteins[0]</expression-string>
+        <expression-string>self.features_linear_layer(amino_acids)[0][0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>criterion(prediction.squeeze(), labels.to(device).double())</expression-string>
+        <expression-string>(amino_acids)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>test_vec_rep.y_pred</expression-string>
+        <expression-string>nn.Tanh()(self.features_linear_layer(amino_acids))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>__py_debug_temp_var_628787415[294]</expression-string>
+        <expression-string>nn.Tanh(self.features_linear_layer(amino_acids))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>vec_per_couples.squeeze().tolist()[0]</expression-string>
+        <expression-string>self.ReLU_activation(self.features_linear_layer(amino_acids))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>output[0:723690] [115][0]</expression-string>
+        <expression-string>amino_acids</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>output[0:723690] [115]</expression-string>
+        <expression-string>amino_acids.view(-1, 200, 11)[0][2]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>dict.protein2seq</expression-string>
+        <expression-string>amino_acids.view(-1, 200, 11)[0][1]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>dict.protein2seq[</expression-string>
+        <expression-string>amino_acids.view(-1, 200, 11)[0][0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>scores_per_couples.squeeze().tolist()</expression-string>
+        <expression-string>amino_acids.view(-1, 200, 11)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.round().squeeze().int().tolist()</expression-string>
+        <expression-string>[dict.protein2idx[x] for x in proteins_names]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.squeeze().int().tolist()</expression-string>
+        <expression-string>torch.stack(embeddings)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.round()</expression-string>
+        <expression-string>amino_acids_emb.values()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.int()</expression-string>
+        <expression-string>(dict.proteins)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>prediction.int().squeeze()</expression-string>
+        <expression-string>torch.tensor(np.stack(emb, axis=0)).view(-1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -655,6 +663,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/init.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="428" selection-start-line="428" selection-end-line="428" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/main_reg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5325">
+          <caret line="355" column="34" selection-start-line="355" selection-start-column="34" selection-end-line="355" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model_reg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="26400">
@@ -676,9 +705,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/-2120054844/torch/nn/modules/sparse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-281">
+          <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/tmp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
+        <state relative-caret-position="232">
           <caret line="155" selection-start-line="155" selection-end-line="155" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
@@ -688,45 +724,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model/dictionary.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        <state relative-caret-position="643">
+          <caret line="110" selection-start-line="110" selection-end-line="110" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="179" column="65" lean-forward="true" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="310" column="10" lean-forward="true" selection-start-line="310" selection-start-column="10" selection-end-line="310" selection-end-column="10" />
+        <state relative-caret-position="209">
+          <caret line="253" column="4" selection-start-line="253" selection-start-column="4" selection-end-line="253" selection-end-column="4" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/model_reg.py">
+    <entry file="file://$PROJECT_DIR$/model/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="222" selection-start-line="222" selection-end-line="222" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/main_reg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="184" column="46" lean-forward="true" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
+        <state relative-caret-position="-362">
+          <caret line="183" column="40" lean-forward="true" selection-start-line="183" selection-start-column="40" selection-end-line="183" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
