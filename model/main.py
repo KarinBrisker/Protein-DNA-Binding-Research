@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
     parser.add_argument('--num_proteins', type=float, default=142, help='num all proteins in the dataset')
-    parser.add_argument('--train_or_classification', type=int, default=0, help='1 - train ranking, 1 - classification')
+    parser.add_argument('--train_or_classification', type=int, default=1, help='1 - train ranking, 1 - classification')
     parser.add_argument('--embedding_dim', type=float, default=32,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.4,
@@ -291,23 +291,11 @@ def create_dataset_loader(data, dict, device, args):
 
 
 """
-create_dataset loader classification
-"""
-
-
-def create_dataset_loader_classification(data, amino_acids_emb, device, args):
-    # "protein", "protein_name", "dna", "score"]
-    dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], amino_acids_emb, device)
-    loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
-    return loader
-
-
-"""
 lr scheduler
 """
 
 
-def exp_lr_scheduler(optimizer, epoch, init_lr=0.001, lr_decay_epoch=25):
+def exp_lr_scheduler(optimizer, epoch, init_lr=0.01, lr_decay_epoch=5):
     """Decay learning rate by a factor of 0.1 every lr_decay_epoch epochs."""
     lr = init_lr * (0.5**(epoch // lr_decay_epoch))
     print('LR is set to {}'.format(lr))
@@ -315,6 +303,18 @@ def exp_lr_scheduler(optimizer, epoch, init_lr=0.001, lr_decay_epoch=25):
         param_group['lr'] = lr
 
     return optimizer
+
+
+"""
+create_dataset loader classification
+"""
+
+
+def create_dataset_loader_classification(data, dict, device, args):
+    # "protein", "protein_name", "dna", "score"]
+    dataset = ProteinsDatasetClassification(data[:, 0], data[:, 1], data[:, 2], data[:, 3], dict, device)
+    loader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
+    return loader
 
 
 """
@@ -367,7 +367,7 @@ def main():
             logging.info('\n\n### epoch: ' + str(epoch) + ' ###\n\n')
             train_data = get_proteins_data(train_proteins)
             train_loader = create_dataset_loader(train_data, dict, device, args)
-            if epoch % 25 == 0:
+            if epoch % 5 == 0:
                 optimizer = exp_lr_scheduler(optimizer, epoch, 0.01)
             train(args, model, train_loader, optimizer, params, criterion)
             test(model, dev_loader, criterion)
@@ -387,7 +387,7 @@ def main():
                                           get_proteins_data_classification(dev_proteins), \
                                           get_proteins_data_classification(test_proteins)
         # test_data = get_proteins_data(test_proteins)
-        test_loader = create_dataset_loader_classification(test_data, amino_acids_emb, device, args)
+        #test_loader = create_dataset_loader_classification(test_data, dict, device, args)
         '''
         for i in range(37,200):
             logging.info(f'epoch:{i}')
@@ -401,36 +401,36 @@ def main():
 
             test(model, test_loader, criterion)
         '''
-        model = SiameseClassifier(args, device).double().to(device)
-        path = '../model/2019_11_21_13:48:13/epoch_31.pt'
+        model = SiameseClassifier(args, device, amino_acids_emb).double().to(device)
+        path = '../model/2019_11_26_00:18:54/epoch_26.pt'
         model.load_state_dict(torch.load(path))
-        model = DataParallel(model, device_ids=[2, 0, 1], output_device=2)  # run on all 4 gpu
+        model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
 
-        test_vec_rep = get_vector_rep_of_protein_and_dna(model, test_loader)
-        test_vec_rep.to_pickle('test_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        #test_vec_rep = get_vector_rep_of_protein_and_dna(model, test_loader)
+        #test_vec_rep.to_pickle('test_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('dev')
-        dev_loader = create_dataset_loader_classification(dev_data, amino_acids_emb, device, args)
+        dev_loader = create_dataset_loader_classification(dev_data, dict, device, args)
         dev_vec_rep = get_vector_rep_of_protein_and_dna(model, dev_loader)
-        dev_vec_rep.to_pickle('dev_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        dev_vec_rep.to_pickle('dev_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('train')
-        train_loader = create_dataset_loader_classification(train_data[:1000000], amino_acids_emb, device, args)
+        train_loader = create_dataset_loader_classification(train_data[:1000000], dict, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        train_vec_rep.to_pickle('train_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('ok')
         print('train1')
-        train_loader = create_dataset_loader_classification(train_data[1000000:2000000], amino_acids_emb, device, args)
+        train_loader = create_dataset_loader_classification(train_data[1000000:2000000], dict, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train1_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        train_vec_rep.to_pickle('train1_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('ok')
         print('train2')
-        train_loader = create_dataset_loader_classification(train_data[2000000:3000000], amino_acids_emb, device, args)
+        train_loader = create_dataset_loader_classification(train_data[2000000:3000000], dict, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train2_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        train_vec_rep.to_pickle('train2_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('ok')
         print('train3')
-        train_loader = create_dataset_loader_classification(train_data[3000000:], amino_acids_emb, device, args)
+        train_loader = create_dataset_loader_classification(train_data[3000000:], dict, device, args)
         train_vec_rep = get_vector_rep_of_protein_and_dna(model, train_loader)
-        train_vec_rep.to_pickle('train3_vec_rep_of_couples__2019_11_21_13:48:13_epoch_31.pkl')
+        train_vec_rep.to_pickle('train3_vec_rep_of_couples__2019_11_26_00:18:54_epoch_26.pkl')
         print('ok')
         exit()
         # df_train.to_pickle(os.path.join('../model', '2019_11_06_10:47:31_epoch_406___test___.pkl'))

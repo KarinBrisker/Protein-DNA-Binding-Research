@@ -5,7 +5,14 @@
       <paths name="DNA Project">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" />
+            <mapping deploy="." local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="dahanka1@nlp8:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_project_105" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

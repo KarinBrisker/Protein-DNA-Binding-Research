@@ -154,6 +154,7 @@ class SiameseClassifier(nn.Module):
         # protein 11 features - pretrained
         self.embedding_amino_acids = nn.Embedding(args.num_proteins, 200 * 11)
         self.embedding_amino_acids.weight.data.copy_(pretrained_amino_acids_features)
+        self.embedding_amino_acids.weight.requires_grad = False
 
         # dna
         self.embedding_nucleotides = nn.Embedding(args.num_nucleotides, args.embedding_dim)
@@ -200,19 +201,19 @@ class SiameseClassifier(nn.Module):
         # print(rank)
         return rank
 
-    def score_per_couple(self, p, d, amino_acids):
+    def score_per_couple(self, p, d, p_idx):
         """ Score per DNA and Protein at inference time. """
-        h = self.vec_of_couple(p, d, amino_acids)
+        h = self.vec_of_couple(p, d, p_idx)
         # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the pair
         y_hat = self.output_fc(h)
 
         return y_hat
 
-    def vec_of_couple(self, p, d, amino_acids):
+    def vec_of_couple(self, p, d, p_idx):
         """ Vec representation of DNA and Protein. """
-
+        amino_acids = self.embedding_amino_acids(p_idx.to(p.device)).view(-1, 200, 11)
         amino_acids = self.ReLU_activation(self.features_linear_layer(amino_acids))
-        p = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        p = self.protein_embeddings(p)  # p: (batch_size x l_p x embedding_dim)
         # concat learnable embeddings to amino-acids features
         p = self.ReLU_activation(self.dense_protein(torch.cat([p, amino_acids], dim=2)))
         output_p = self.encoder_protein(p)

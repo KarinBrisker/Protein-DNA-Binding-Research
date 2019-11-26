@@ -91,13 +91,12 @@ output for each sample:
 
 class ProteinsDatasetClassification(Dataset):
     # "protein", "protein_name", "dna", "score"]
-    def __init__(self, proteins, proteins_names, dna, score, amino_acids, device):
-        self.amino_acids = amino_acids
+    def __init__(self, proteins, proteins_names, dna, score, dict, device):
         self.device = device
         self.proteins_ = torch.stack(list(proteins)).to(self.device)
         self.dnas_ = torch.stack(list(dna)).to(self.device)
         self.scores_ = torch.tensor(list(score))
-        self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
+        self.prot_idx_ = [dict.protein2idx[x] for x in proteins_names]
 
     def __len__(self):
         return len(self.scores_)
@@ -106,5 +105,5 @@ class ProteinsDatasetClassification(Dataset):
         protein = self.proteins_[idx]
         dna = self.dnas_[idx]
         label = self.scores_[idx]
-        amino_acids = self.amino_acids_[idx].double().to(self.device)
-        return protein, dna, label, amino_acids
+        prot_idxs = self.prot_idx_[idx]
+        return protein, dna, label, prot_idxs
