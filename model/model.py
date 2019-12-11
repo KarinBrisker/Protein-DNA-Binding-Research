@@ -184,14 +184,9 @@ class SiameseClassifier(nn.Module):
         h1 = self.feature_extractor_module(p, d1)
         h2 = self.feature_extractor_module(p, d2)
 
-        # y_hat - (bs * 1)  -> (-0.2) to (+0.2) - the score of the first and the second pair
-        y_hat1 = self.output_fc(h1)
-        y_hat2 = self.output_fc(h2)
-
-        # sigmoid -> 0 to 1, if less than 0.5 means second is higher
-        rank = self.Sigmoid_activation(y_hat1 - y_hat2)
-        # print(rank)
-        return rank
+        v1 = self.output_fc(h1)
+        v2 = self.output_fc(h2)
+        return self.Sigmoid_activation(v1 - v2)
 
     def score_per_couple(self, p, d, amino_acids):
         """ Score per DNA and Protein at inference time. """

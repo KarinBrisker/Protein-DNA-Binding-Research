@@ -97,6 +97,7 @@ class ProteinsDatasetClassification(Dataset):
         self.dnas_ = torch.stack(list(dna)).to(self.device)
         self.scores_ = torch.tensor(list(score))
         self.amino_acids_ = [self.amino_acids[x] for x in proteins_names]
+        self.proteins_names_ = proteins_names
 
     def __len__(self):
         return len(self.scores_)
@@ -106,4 +107,36 @@ class ProteinsDatasetClassification(Dataset):
         dna = self.dnas_[idx]
         label = self.scores_[idx]
         amino_acids = self.amino_acids_[idx].double().to(self.device)
-        return protein, dna, label, amino_acids
+        protein_name = self.proteins_names_[idx]
+        return protein, dna, label, amino_acids, protein_name
+
+
+
+"""
+this class provides two random samples of: dna, protein, binding score
+output for each sample:
+        # protein - protein seq
+        # dna - dna seq
+        # amino acids - 12 features for each amino acid in the protein
+        # label - binding score
+"""
+
+
+class Vec2score(Dataset):
+    # "protein", "protein_name", "dna", "score"]
+    def __init__(self, proteins, dna, score, vec, device):
+        self.device = device
+        self.proteins_ = [str(x) for x in proteins]
+        self.dnas_ = [str(x) for x in dna]
+        self.scores_ = list(score)
+        self.vecs_ = list(vec)
+
+    def __len__(self):
+        return len(self.scores_)
+
+    def __getitem__(self, idx):
+        protein = self.proteins_[idx]
+        dna = self.dnas_[idx]
+        label = self.scores_[idx]
+        vec = torch.Tensor(self.vecs_[idx]).to(self.device).double()
+        return protein, dna, label, vec

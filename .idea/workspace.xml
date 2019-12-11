@@ -19,17 +19,56 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DNA$main_reg.coverage" NAME="main_reg Coverage Results" MODIFIED="1574293325094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
     <SUITE FILE_PATH="coverage/DNA$spacy_learn.coverage" NAME="spacy_learn Coverage Results" MODIFIED="1574717745127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/learning" />
-    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1574801437532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$dictionary.coverage" NAME="dictionary Coverage Results" MODIFIED="1575977756437" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
+    <SUITE FILE_PATH="coverage/DNA$main.coverage" NAME="main Coverage Results" MODIFIED="1576051589919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.3675035">
+    <splitter split-orientation="horizontal" split-proportion="0.56184894">
       <split-first>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/model/dictionary.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="540">
+                  <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+                  <folding>
+                    <element signature="e#0#36#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/-2120054844/torch/utils/data/dataloader.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="8970">
+                  <caret line="614" selection-start-line="614" selection-end-line="614" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/model/tmp.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2700">
+                  <caret line="184" selection-start-line="184" selection-end-line="184" />
+                  <folding>
+                    <element signature="e#0#21#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/model/utils.py">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/model/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="465">
-                  <caret line="364" column="56" lean-forward="true" selection-start-line="364" selection-start-column="56" selection-end-line="364" selection-end-column="56" />
+                <state relative-caret-position="-230">
+                  <caret line="132" column="80" selection-start-line="132" selection-start-column="80" selection-end-line="132" selection-end-column="80" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -37,15 +76,33 @@
               </provider>
             </entry>
           </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/-2120054844/torch/nn/modules/module.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="198">
+                  <caret line="488" selection-start-line="488" selection-end-line="488" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/1353241312/codecs.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="4650">
+                  <caret line="310" selection-start-line="310" selection-end-line="310" />
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/model/model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="795">
-                  <caret line="155" column="15" selection-start-line="155" selection-start-column="15" selection-end-line="155" selection-end-column="15" />
+                <state relative-caret-position="150">
+                  <caret line="190" column="49" selection-start-line="190" selection-start-column="49" selection-end-line="190" selection-end-column="49" />
                   <folding>
                     <element signature="e#0#31#0" expanded="true" />
                   </folding>
@@ -66,44 +123,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ProteinsDataset</find>
-      <find>dict</find>
-      <find>SiameseClassifier</find>
-      <find>create_dataset_loader</find>
-      <find>embedding_amino_acids</find>
-      <find>[2,</find>
-      <find>protein_embeddings</find>
-      <find>test</find>
-      <find>ReLU_activation</find>
-      <find>self.ReLU_activation(</find>
-      <find>protein2idx</find>
-      <find>train loss</find>
-      <find>tanh_activation</find>
-      <find>15</find>
-      <find>[</find>
-      <find>ProteinsDatasetClassification</find>
-      <find>create_dataset_loader_classification</find>
-      <find>exp_lr_scheduler</find>
-      <find>modul</find>
-      <find>encoder_protein</find>
-      <find>tensor([[</find>
-      <find>13/epoch_28.p</find>
-      <find>feature_extractor_module</find>
-      <find>LeakyReLU</find>
-      <find>logging.info(</find>
-      <find>input_size</find>
-      <find>64</find>
-      <find>32</find>
       <find>DecomposableAttention</find>
       <find>print</find>
+      <find>model.</find>
+      <find>scores_</find>
+      <find>999</find>
+      <find>get proteins data'</find>
+      <find>forward</find>
+      <find>pickle</find>
+      <find>logging</find>
+      <find>score_per_couple</find>
+      <find>init_amino_acid_data</find>
+      <find>create_dataset_loader</find>
+      <find>train_data</find>
+      <find>proteins_names</find>
+      <find>&gt; 0</find>
+      <find>200</find>
+      <find>get_proteins_data_classification</find>
+      <find>get proteins data</find>
+      <find>[1 if</find>
+      <find>train(</find>
+      <find>seed</find>
+      <find>get_proteins_data</find>
+      <find>train_or_classification</find>
+      <find>ProteinsDatasetClassification</find>
+      <find>create_dataset_loader_classification</find>
+      <find>classification</find>
+      <find>= data</find>
+      <find>18</find>
+      <find>modu</find>
+      <find>get_vector_rep_of_protein_and_dna</find>
     </findStrings>
     <replaceStrings>
-      <replace>print('6')</replace>
-      <replace>print('7')</replace>
-      <replace>print('8')</replace>
-      <replace>print('9')</replace>
-      <replace>print('10')</replace>
-      <replace>print('11')</replace>
       <replace>print('12')</replace>
       <replace>print('13')</replace>
       <replace>print('14')</replace>
@@ -128,6 +179,12 @@
       <replace>print(</replace>
       <replace>nn.LeakyReLU</replace>
       <replace>logging.info</replace>
+      <replace>2019_11_26_22:53:45</replace>
+      <replace>_epoch_21.</replace>
+      <replace>after_relu_</replace>
+      <replace>score_of_couples_</replace>
+      <replace>mode</replace>
+      <replace>16</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -149,9 +206,9 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="55" />
-    <option name="y" value="114" />
-    <option name="width" value="1855" />
-    <option name="height" value="789" />
+    <option name="y" value="25" />
+    <option name="width" value="1865" />
+    <option name="height" value="1055" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -159,6 +216,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -175,7 +233,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -222,6 +279,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="dictionary" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DNA" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/dictionary.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -330,10 +406,12 @@
       <item itemvalue="Python.main_reg" />
       <item itemvalue="Python.spacy_learn" />
       <item itemvalue="Python.tmp" />
+      <item itemvalue="Python.dictionary" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.dictionary" />
         <item itemvalue="Python.spacy_learn" />
         <item itemvalue="Python.main_reg" />
         <item itemvalue="Python.tmp" />
@@ -392,41 +470,56 @@
       <workItem from="1574754949280" duration="1223000" />
       <workItem from="1574765116119" duration="9708000" />
       <workItem from="1574781744366" duration="1556000" />
-      <workItem from="1574795723280" duration="5721000" />
+      <workItem from="1574795723280" duration="6169000" />
+      <workItem from="1574848937090" duration="5633000" />
+      <workItem from="1574864541056" duration="7562000" />
+      <workItem from="1574933367839" duration="887000" />
+      <workItem from="1574935640437" duration="4101000" />
+      <workItem from="1574947252092" duration="24000" />
+      <workItem from="1574977184743" duration="4000" />
+      <workItem from="1575190220471" duration="13927000" />
+      <workItem from="1575228405871" duration="1206000" />
+      <workItem from="1575272550063" duration="408000" />
+      <workItem from="1575272980381" duration="18388000" />
+      <workItem from="1575366540431" duration="3782000" />
+      <workItem from="1575462605429" duration="1229000" />
+      <workItem from="1575880109320" duration="3164000" />
+      <workItem from="1575972815707" duration="15784000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="367273000" />
+    <option name="totallyTimeSpent" value="443820000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="25" width="1865" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.110500276" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09400769" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" sideWeight="0.49972513" weight="0.32937366" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.032397408" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.8884002" visible="true" weight="0.21598272" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7877955" weight="0.5615551" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49972513" weight="0.22354212" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8862012" weight="0.2699784" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.78449696" visible="true" weight="0.34449244" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32937366" />
-      <window_info anchor="bottom" id="File Transfer" order="9" sideWeight="0.49917537" weight="0.41144708" />
+      <window_info anchor="bottom" id="File Transfer" order="9" sideWeight="0.49257833" weight="0.19654427" />
       <window_info anchor="bottom" id="Database Changes" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.25701943" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.11159978" side_tool="true" visible="true" weight="0.21598272" />
-      <window_info anchor="bottom" id="Python Console" order="13" weight="0.33585313" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49807587" weight="0.2559395" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.21550302" side_tool="true" visible="true" weight="0.34449244" />
+      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.7669049" weight="0.33585313" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.4862259" visible="true" weight="0.101154484" />
-      <window_info anchor="right" id="SciView" order="4" sideWeight="0.6311927" weight="0.28697085" />
+      <window_info anchor="right" id="Remote Host" order="3" sideWeight="0.47047246" weight="0.101154484" />
+      <window_info anchor="right" id="SciView" order="4" sideWeight="0.6227348" visible="true" weight="0.06157229" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.5137741" side_tool="true" visible="true" weight="0.101154484" />
+      <window_info anchor="right" x="0" y="0" width="416" height="855" id="Documentation" order="6" sideWeight="0.37726524" side_tool="true" visible="true" weight="0.06157229" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2017592" />
@@ -507,34 +600,39 @@
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>218</line>
-          <option name="timeStamp" value="123" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/learning/spacy_learn.py</url>
           <line>28</line>
           <option name="timeStamp" value="129" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>57</line>
-          <option name="timeStamp" value="132" />
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>198</line>
+          <option name="timeStamp" value="141" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>166</line>
-          <option name="timeStamp" value="133" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model/model.py</url>
-          <line>206</line>
-          <option name="timeStamp" value="134" />
+          <url>file://$PROJECT_DIR$/model/dictionary.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="153" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model/main.py</url>
-          <line>190</line>
-          <option name="timeStamp" value="141" />
+          <line>108</line>
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>103</line>
+          <option name="timeStamp" value="159" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>189</line>
+          <option name="timeStamp" value="160" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model/main.py</url>
+          <line>415</line>
+          <option name="timeStamp" value="161" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -545,9 +643,38 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="output" />
+        <watch expression="ProteinsDatasetClassification" />
+        <watch expression="self.amino_acids " />
+        <watch expression="seq2prot" />
+        <watch expression="prot2seq" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
+      <expression>
+        <expression-string>torch.Tensor(list(data.values[:, 3])[0])</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>list(data.values[:, 3])[0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>list(data.values[:, 3])</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>data.values[:, 3]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>train_data[:]</expression-string>
         <language-id>Python</language-id>
@@ -573,75 +700,62 @@
         <language-id>Python</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
+    </expressions>
+    <expressions id="watch">
       <expression>
-        <expression-string>self.features_linear_layer(amino_acids)[0][0]</expression-string>
+        <expression-string>output</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>(amino_acids)</expression-string>
+        <expression-string>round()</expression-string>
         <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>nn.Tanh()(self.features_linear_layer(amino_acids))</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>nn.Tanh(self.features_linear_layer(amino_acids))</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>self.ReLU_activation(self.features_linear_layer(amino_acids))</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>self.encoder_dna(d1)</expression-string>
+        <expression-string>train_dev_test.to_pickle('train_dev_test_proteins_precision2.pkl')</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>sum(L)/len(L)</expression-string>
+        <expression-string>train_dev_test.columns</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>sum(L)</expression-string>
+        <expression-string>train_dev_test.protein_seq.apply(lambda x:seq2prot[x])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>mean(L)</expression-string>
+        <expression-string>list(map(str, train_dev_test.protein_seq))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>max(L)</expression-string>
+        <expression-string>list(seq2prot.keys())[0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>min(L)</expression-string>
+        <expression-string>seq2prot.keys()[0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>e+[0.001] * 11</expression-string>
+        <expression-string>list(vec)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>[0.001] * 11</expression-string>
+        <expression-string>list(score)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>h</expression-string>
+        <expression-string>list(dna)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -697,16 +811,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/tmp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2265">
-          <caret line="155" selection-start-line="155" selection-end-line="155" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1866903991/1353241312/logging/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="26400">
@@ -725,33 +829,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="26100">
           <caret line="1740" selection-start-line="1740" selection-end-line="1740" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/dictionary.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="108" column="47" selection-start-line="108" selection-start-column="47" selection-end-line="108" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="155" column="15" selection-start-line="155" selection-start-column="15" selection-end-line="155" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/-2120054844/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="488" selection-start-line="488" selection-end-line="488" />
         </state>
       </provider>
     </entry>
@@ -800,10 +877,64 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/-2120054844/torch/utils/data/dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8970">
+          <caret line="614" selection-start-line="614" selection-end-line="614" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/tmp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2700">
+          <caret line="184" selection-start-line="184" selection-end-line="184" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/1353241312/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4650">
+          <caret line="310" selection-start-line="310" selection-end-line="310" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.3/system/remote_sources/1405330468/-2120054844/torch/nn/modules/module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="488" selection-start-line="488" selection-end-line="488" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/dictionary.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="190" column="49" selection-start-line="190" selection-start-column="49" selection-end-line="190" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="364" column="56" lean-forward="true" selection-start-line="364" selection-start-column="56" selection-end-line="364" selection-end-column="56" />
+        <state relative-caret-position="-230">
+          <caret line="132" column="80" selection-start-line="132" selection-start-column="80" selection-end-line="132" selection-end-column="80" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
