@@ -87,7 +87,6 @@ output for each sample:
         # label - binding score
 """
 
-
 class ProteinsDatasetClassification(Dataset):
     # "protein", "protein_name", "dna", "score"]
     def __init__(self, proteins, proteins_names, dna, score, amino_acids, device):
@@ -140,3 +139,4 @@ class Vec2score(Dataset):
         label = self.scores_[idx]
         vec = torch.Tensor(self.vecs_[idx]).to(self.device).double()
         return protein, dna, label, vec
+

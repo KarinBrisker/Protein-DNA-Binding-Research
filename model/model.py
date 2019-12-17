@@ -213,6 +213,19 @@ class SiameseClassifier(nn.Module):
         h = self.feature_extractor_module(p, d)
         return h
 
+
+    def get_protein_vec(self, p, amino_acids):
+        amino_acids1 = self.ReLU_activation(self.features_linear_layer(amino_acids))
+        p1 = self.embedding_amino_acids(p)  # p: (batch_size x l_p x embedding_dim)
+        # concat learnable embeddings to amino-acids features1
+        p = self.ReLU_activation(self.dense_protein(torch.cat([p1, amino_acids1], dim=2)))
+        output_p = self.encoder_protein(p)
+        p = output_p.contiguous().view(-1, p.size(1), self.hidden_size)
+
+
+        return p.squeeze(0).mean(0)
+
+
     def initialize_parameters(self):
         """ Initializes network parameters. """
         print('init params')
