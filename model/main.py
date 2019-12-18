@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import sklearn
-# from sklearn.metrics import precision_score, recall_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, confusion_matrix
 import logging
 from torch.nn import DataParallel
 import pickle
@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument('--lr', type=float, default=5e-3, help='initial learning rate')
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--epochs', type=int, default=5000, help='upper epoch limit')
-    parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
+    parser.add_argument('--batch_size', type=int, default=1024, metavar='N', help='batch size')
     parser.add_argument('--seed', type=int, default=1111, help='random seed')
     parser.add_argument('--wdecay', type=float, default=5e-5, help='weight decay applied to all weights')
     parser.add_argument('--hidden_size', type=float, default=128, help='hidden size')
@@ -35,7 +35,7 @@ def parse_args():
     parser.add_argument('--num_layers', type=float, default=2, help='num layers bi-lstm')
     parser.add_argument('--num_amino_acids', type=float, default=21, help='num amino-acids types in protein')
     parser.add_argument('--num_nucleotides', type=float, default=4, help='num nucleotides types in Dna')
-    parser.add_argument('--mode', type=int, default=2, help='0 - train ranking, 1 - get vectors, 2 - get scores, 3 - jasfer salex')
+    parser.add_argument('--mode', type=int, default=0, help='0 - train ranking, 1 - get vectors, 2 - get scores, 3 - jasfer salex')
     parser.add_argument('--embedding_dim', type=float, default=64,
                         help='embedding dim of each nucleotide and amino-acid')
     parser.add_argument('--dropout', type=float, default=0.2,
@@ -127,7 +127,7 @@ def get_proteins_data(proteins):
         second_dna = np.array(curr_p_df[["dna1", "score1"]].values)
         np.random.shuffle(second_dna)
         curr_p_df = pd.concat([curr_p_df, pd.DataFrame(second_dna, columns=['dna2', 'score2'])], axis=1)
-        curr_p_df["diff"] = abs(curr_p_df["score1"] - curr_p_df["score2"]) > 0.3
+        curr_p_df["diff"] = abs(curr_p_df["score1"] - curr_p_df["score2"]) > 0.2
         # remove rows if 2 dna's are close, and if it's the same dna(the first condition captures both)
         df = curr_p_df[curr_p_df["diff"] == True]
         curr_p_array = np.array(df[["protein", "protein_name", "dna1", "score1", "dna2", "score2"]].values)
@@ -423,9 +423,9 @@ def train_loop(args, device, amino_acids_emb):
         dev_proteins), get_proteins_data(test_proteins)
 
     model = SiameseClassifier(args, device).double().to(device)
-    path = '../model/2019_12_10_16:33:28/epoch_21.pt'
-    model.load_state_dict(torch.load(path))
-
+    # path = '../model/2019_12_10_16:33:28/epoch_21.pt'
+    # model.load_state_dict(torch.load(path))
+    logging.info('nlp 6, diff 0.2 lr 0.01 and adding vectors and mlp instead of subtraction')
     model = DataParallel(model, device_ids=[2, 0, 1, 3], output_device=2)  # run on all 4 gpu
     logging.info('create data loaders')
     dev_loader = create_dataset_loader(dev_data, amino_acids_emb, device, args)
@@ -521,6 +521,8 @@ main function
 
 
 def main():
+
+
     args = parse_args()
     # Set the random seed manually for reproducibility.
     torch.manual_seed(args.seed)

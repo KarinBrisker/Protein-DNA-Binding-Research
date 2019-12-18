@@ -1,4 +1,5 @@
 import torch.nn.functional as F
+from torch.autograd import Variable
 from torch.nn.init import xavier_normal_
 import torch.nn as nn
 import torch
@@ -140,6 +141,15 @@ class SiameseClassifier(nn.Module):
 
     def __init__(self, args, device):
         super(SiameseClassifier, self).__init__()
+        # linear -> BN -> relu -> dropout -> linear -> relu
+        def MLP(input_dim, output_dim):
+            layers = [nn.Linear(input_dim, input_dim)]
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            layers.append(nn.Linear(input_dim, output_dim))
+            mlp = nn.Sequential(*layers)
+
+            return mlp
+
         self.hidden_size = args.hidden_size
         self.ReLU_activation = nn.LeakyReLU(0.2, inplace=True)
         self.Sigmoid_activation = torch.sigmoid
@@ -156,11 +166,13 @@ class SiameseClassifier(nn.Module):
         # Initialize constituent network
         self.encoder_dna = BiLSTM(args, args.embedding_dim, device)
         self.feature_extractor_module = DecomposableAttention(self.hidden_size)
-        self.output_fc = nn.Linear(32, 1, bias=True)
-
+        self.mlp = MLP(32, 1)
+        self.V = Variable(torch.rand(32), requires_grad=True)
+        self.output_fc = nn.Linear(32, 1, bias= True)
         # Initialize network parameters
         self.initialize_parameters()
         self.device = device
+
 
     def forward(self, p, d1, d2, amino_acids):
         """ Performs a single forward pass through the siamese architecture. """
@@ -181,12 +193,10 @@ class SiameseClassifier(nn.Module):
         d2 = output_d2.contiguous().view(-1, d1.size(1), self.hidden_size)
 
         # h1, h2 - (bs * hidden_dim)
-        h1 = self.feature_extractor_module(p, d1)
-        h2 = self.feature_extractor_module(p, d2)
+        v1 = self.feature_extractor_module(p, d1)
+        v2 = self.feature_extractor_module(p, d2)
 
-        v1 = self.output_fc(h1)
-        v2 = self.output_fc(h2)
-        return self.Sigmoid_activation(v1 - v2)
+        return self.Sigmoid_activation(self.mlp(v1 * self.V.to(v1.device) * v2))
 
     def score_per_couple(self, p, d, amino_acids):
         """ Score per DNA and Protein at inference time. """
